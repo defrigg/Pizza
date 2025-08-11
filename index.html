@@ -3,67 +3,73 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>The Pizza | POS + รายวัน + ประวัติรายได้</title>
+<title>The Pizza | POS</title>
 <style>
   :root{
-    --bg:#0f1115; --panel:#171a21; --soft:#202534; --soft-2:#2a3142;
-    --text:#e8ecf1; --muted:#a9b3c1; --accent:#36d399; --danger:#ff6b6b; --warn:#fbbf24;
-    --border:#2b3244;
+    --bg:#121212;           /* พื้นหลังเข้ม */
+    --panel:#1a1a1a;        /* พื้น panel */
+    --soft:#242424;         /* พื้นปุ่ม */
+    --soft-2:#2e2e2e;       /* พื้นปุ่ม hover */
+    --text:#ffffff;         /* สีตัวอักษรหลัก */
+    --muted:#c9c9c9;        /* สีตัวอักษรรอง */
+    --accent:#28a745;       /* เขียวหลัก (ปุ่มยืนยัน/คิดเงิน) */
+    --danger:#dc3545;       /* แดงหลัก (ปุ่มลบ/เพิ่มชิ้น) */
+    --warn:#ffc107;         /* เหลือง (ปุ่มเตือน/คำนวณ) */
+    --border:#333333;       /* เส้นขอบ */
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,TH Sarabun New,Prompt,sans-serif;
-    color:var(--text); background:linear-gradient(180deg,#0f1115,#0f1115 40%,#121624 100%);
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,TH Sarabun New,Prompt,sans-serif;
+    color:var(--text);
+    background:var(--bg);
   }
   header{
-    position:sticky; top:0; z-index:10; backdrop-filter: blur(6px);
-    background:rgba(15,17,21,.7); border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:10;
+    background:var(--panel);
+    border-bottom:1px solid var(--border);
   }
   .wrap{max-width:1200px; margin:0 auto; padding:16px}
-  .brand{display:flex; align-items:center; gap:12px;}
-  .logo{
-    width:44px; height:44px; border-radius:12px; background:conic-gradient(from 200deg at 50% 50%, #ff9f1c, #ff4040, #ff9f1c);
-    display:grid; place-items:center; font-weight:900; color:#111; border:2px solid #0007;
-    box-shadow:0 6px 20px #ff404033, inset 0 0 30px #fff2;
+  .brand{
+    display:flex; align-items:center; gap:12px;
   }
-  .brand h1{margin:0; font-size:22px; letter-spacing:.5px}
+  .logo{
+    width:44px; height:44px; border-radius:12px;
+    background:linear-gradient(45deg, var(--danger), var(--accent));
+    display:grid; place-items:center;
+    font-weight:900; color:#fff;
+    border:2px solid #0007;
+  }
+  .brand h1{margin:0; font-size:22px}
   .price-strip{display:flex; gap:12px; color:var(--muted); font-size:14px; flex-wrap:wrap}
   .pill{background:var(--soft); padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
-  .nav{display:flex; gap:6px; flex-wrap:wrap}
-  .tab{background:var(--soft); border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer}
-  .tab.active{background:#1f2a44; border-color:#3a425c; color:#cfe2ff}
-
   main{display:grid; grid-template-columns:1.3fr .7fr; gap:16px; padding:16px}
   @media (max-width: 900px){ main{grid-template-columns:1fr} }
+
   .panel{background:var(--panel); border:1px solid var(--border); border-radius:16px}
   .panel h2{margin:0; padding:16px; border-bottom:1px solid var(--border); font-size:18px}
-
-  /* Menu grid */
   .menu{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; padding:16px}
   .card{
     background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px;
     transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
   }
-  .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px #0006; border-color:#3a425c}
+  .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px #0006; border-color:var(--accent)}
   .card h3{margin:0 0 6px 0; font-size:16px}
   .desc{color:var(--muted); font-size:13px; line-height:1.35; min-height:3.6em}
   .actions{display:flex; gap:8px; margin-top:auto}
+
   button{
-    cursor:pointer; border:none; border-radius:10px; padding:10px 12px; background:var(--soft-2); color:var(--text);
-    border:1px solid var(--border); font-weight:600
+    cursor:pointer; border:none; border-radius:10px; padding:10px 12px;
+    color:#fff; font-weight:600;
   }
   button:hover{filter:brightness(1.05)}
-  .btn-add-piece{background:#23304a}
-  .btn-add-tray{background:#1f3a2f}
-  .btn-danger{background:#3a2227; border-color:#5a2b33; color:#ffdfe3}
-  .btn-accent{background:#103a2c; border-color:#185a44; color:#b6ffe4}
-  .btn-warn{background:#3b341f; border-color:#5d4c17; color:#ffe9b0}
-
-  /* Cart */
-  .cart-wrap{padding:0}
-  .cart-body{padding:12px 16px}
-  .cart-tools{display:flex; gap:8px; padding:12px 16px; border-top:1px dashed var(--border); flex-wrap:wrap}
+  .btn-add-piece{background:var(--danger);}
+  .btn-add-tray{background:var(--accent);}
+  .btn-danger{background:var(--danger);}
+  .btn-accent{background:var(--accent);}
+  .btn-warn{background:var(--warn); color:#000;}
+  
   table{width:100%; border-collapse:collapse}
   th, td{padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; font-size:14px}
   th{color:var(--muted); font-weight:600}
@@ -76,649 +82,115 @@
   .summary{padding:12px 16px; border-top:1px solid var(--border); display:grid; gap:6px}
   .summary .row{display:flex; justify-content:space-between; font-size:15px}
   .summary .total{font-size:20px; font-weight:800}
-  .flex{display:flex; gap:8px; align-items:center}
-  input[type="number"], input[type="text"], select{
-    background:#11141b; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; width:100%
-  }
 
-  /* Views */
-  .view{display:none}
-  .view.active{display:block}
-
-  /* Daily & History */
-  .grid{display:grid; gap:12px; padding:16px}
-  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px}
-  .stat{background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:12px}
-  .stat h3{margin:0 0 8px 0; font-size:14px; color:var(--muted)}
-  .stat .val{font-size:22px; font-weight:800}
-  .filter-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-
-  /* Receipt print */
   @media print{
-    header, .menu, .cart-tools, .nav, .view:not(.pos){display:none !important}
+    header, .menu, .cart-tools{display:none !important}
     main{grid-template-columns:1fr !important}
     .panel{border:none}
     body{background:#fff; color:#000}
-    .summary .total{font-size:18px}
-    .print-only{display:block !important}
   }
-  .print-only{display:none}
-  .saving{color:var(--accent); font-weight:700}
-  .warn-txt{color:var(--warn)}
-  .badge{font-size:12px; padding:2px 8px; border-radius:999px; background:#253149; border:1px solid #3a425c; color:#cfe2ff}
 </style>
 </head>
 <body>
-  <header>
-    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-      <div class="brand">
-        <div class="logo">🍕</div>
-        <div>
-          <h1>The Pizza</h1>
-          <div class="price-strip">
-            <span class="pill">ชิ้นละ <b>25</b> บาท</span>
-            <span class="pill">ถาดละ <b>189</b> บาท</span>
-            <span class="pill">1 ถาด = <b>8</b> ชิ้น</span>
-          </div>
-        </div>
-      </div>
-      <nav class="nav">
-        <button class="tab active" data-view="pos">ขาย (POS)</button>
-        <button class="tab" data-view="daily">สรุปรายวัน</button>
-        <button class="tab" data-view="history">ประวัติรายได้ (รายเดือน)</button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- POS VIEW -->
-  <section class="view pos active">
-    <main class="wrap">
-      <!-- Menu -->
-      <section class="panel">
-        <h2>เมนูพิซซ่า</h2>
-        <div class="menu" id="menuGrid"></div>
-      </section>
-
-      <!-- Cart / POS -->
-      <section class="panel cart-wrap">
-        <h2>ตะกร้าสินค้า</h2>
-        <div class="cart-body">
-          <table id="cartTable">
-            <thead>
-              <tr>
-                <th>รายการ</th>
-                <th class="right">ชนิด</th>
-                <th class="right">ราคา/หน่วย</th>
-                <th class="right">จำนวน</th>
-                <th class="right">รวม</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="cartBody">
-              <tr id="emptyRow"><td colspan="6" class="muted">ยังไม่มีสินค้าในตะกร้า</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="cart-tools">
-          <button class="btn-warn" id="optimizeBtn">คำนวณราคาดีที่สุด (จับเป็นถาดอัตโนมัติ)</button>
-          <button class="btn-danger" id="clearBtn">ล้างรายการ</button>
-          <span class="badge">ราคาจะคิดถูกสุดระหว่าง “ชิ้น” และ “ถาด” ต่อรส</span>
-        </div>
-
-        <div class="summary">
-          <div class="row"><span>ยอดก่อนปรับ</span><span class="right" id="rawSubtotal">0</span></div>
-          <div class="row"><span>ส่วนต่างประหยัด (จากการจับชุดถาด)</span><span class="right saving" id="saving">0</span></div>
-          <div class="row total"><span>ยอดสุทธิ</span><span class="right" id="grandTotal">0</span></div>
-
-          <div class="row" style="gap:8px; align-items:center">
-            <span>วิธีชำระ</span>
-            <span style="min-width:200px">
-              <select id="payMethod">
-                <option value="cash">เงินสด</option>
-                <option value="transfer">โอน/QR</option>
-                <option value="card">บัตร</option>
-              </select>
-            </span>
-            <span style="min-width:180px"><input id="cashInput" type="number" min="0" step="1" placeholder="รับเงินสด (บาท)"></span>
-            <span>เงินทอน</span><span class="right" id="change">0</span>
-          </div>
-
-          <div class="flex" style="margin-top:8px; flex-wrap:wrap">
-            <button class="btn-accent" id="checkoutBtn">คิดเงิน & พิมพ์ใบเสร็จ</button>
-            <button id="downloadBtn">บันทึกออเดอร์ (.json)</button>
-            <input id="customerName" type="text" placeholder="ชื่อลูกค้า (ถ้ามี)" />
-          </div>
-          <div class="muted" style="font-size:12px">* เมื่อกด “คิดเงิน” ระบบจะบันทึกยอดขายลงประวัติอัตโนมัติ</div>
-        </div>
-
-        <!-- Receipt (print view) -->
-        <div class="print-only" id="printArea">
-          <h2 style="margin:8px 0 0 0">The Pizza — ใบเสร็จรับเงิน</h2>
-          <div id="receiptMeta" style="font-size:13px; color:#444"></div>
-          <table style="margin-top:8px">
-            <thead>
-              <tr><th>รายการ</th><th class="right">ชนิด</th><th class="right">จำนวน</th><th class="right">ราคา</th></tr>
-            </thead>
-            <tbody id="receiptBody"></tbody>
-          </table>
-          <div style="margin-top:8px; display:grid; gap:4px; max-width:360px; margin-left:auto">
-            <div style="display:flex; justify-content:space-between"><span>ยอดก่อนปรับ</span><b id="rRaw">0</b></div>
-            <div style="display:flex; justify-content:space-between"><span>ส่วนต่างประหยัด</span><b id="rSave">0</b></div>
-            <div style="display:flex; justify-content:space-between; font-size:18px"><span>ยอดสุทธิ</span><b id="rTotal">0</b></div>
-            <div style="display:flex; justify-content:space-between"><span>วิธีชำระ</span><b id="rPayMethod">-</b></div>
-            <div style="display:flex; justify-content:space-between"><span>รับเงิน</span><b id="rCash">0</b></div>
-            <div style="display:flex; justify-content:space-between"><span>เงินทอน</span><b id="rChange">0</b></div>
-          </div>
-          <p style="margin-top:12px;font-size:12px;color:#444">ขอบคุณที่อุดหนุน 🍕</p>
-        </div>
-      </section>
-    </main>
-  </section>
-
-  <!-- DAILY VIEW -->
-  <section class="view daily">
-    <div class="wrap panel">
-      <h2>สรุปยอดขาย “วันนี้”</h2>
-      <div class="grid">
-        <div class="stats">
-          <div class="stat"><h3>ยอดรวม (บาท)</h3><div class="val" id="dSum">0</div></div>
-          <div class="stat"><h3>จำนวนบิล</h3><div class="val" id="dOrders">0</div></div>
-          <div class="stat"><h3>จำนวนชิ้นที่ขาย</h3><div class="val" id="dSlices">0</div></div>
-          <div class="stat"><h3>จำนวนถาดที่ขาย</h3><div class="val" id="dTrays">0</div></div>
-          <div class="stat"><h3>ค่าเฉลี่ยต่อบิล</h3><div class="val" id="dAvg">0</div></div>
-          <div class="stat"><h3>วิธีชำระ (สด/โอน/บัตร)</h3><div class="val" id="dPayMix">-</div></div>
-        </div>
-
-        <div>
-          <h3 style="margin:0 0 8px 0">10 ออเดอร์ล่าสุด</h3>
-          <table id="dLastTable">
-            <thead><tr><th>เวลา</th><th>ยอดสุทธิ</th><th>วิธีชำระ</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-        <div>
-          <h3 style="margin:0 0 8px 0">เมนูขายดี (Top 5)</h3>
-          <table id="dTopTable">
-            <thead><tr><th>เมนู</th><th class="right">ยอดรวม (ชิ้น + ถาด*8)</th></tr></thead>
-            <tbody></tbody>
-          </table>
+<header>
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;">
+    <div class="brand">
+      <div class="logo">🍕</div>
+      <div>
+        <h1>The Pizza</h1>
+        <div class="price-strip">
+          <span class="pill">ชิ้นละ 25 บาท</span>
+          <span class="pill">ถาดละ 189 บาท</span>
+          <span class="pill">1 ถาด = 8 ชิ้น</span>
         </div>
       </div>
     </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <h2>เมนูพิซซ่า</h2>
+    <div class="menu" id="menuGrid"></div>
   </section>
-
-  <!-- HISTORY VIEW -->
-  <section class="view history">
-    <div class="wrap panel">
-      <h2>ประวัติรายได้ (รายเดือน)</h2>
-      <div class="grid">
-        <div class="filter-row">
-          <label>เลือกเดือน: </label>
-          <select id="monthPicker"></select>
-          <button id="exportCSV">ส่งออก CSV</button>
-          <button class="btn-danger" id="wipeData">ลบประวัติทั้งหมด</button>
-          <span class="muted">* ใช้เฉพาะบนเครื่อง/เบราว์เซอร์นี้ (localStorage)</span>
-        </div>
-
-        <div class="stats">
-          <div class="stat"><h3>ยอดรวมเดือนนี้</h3><div class="val" id="mSum">0</div></div>
-          <div class="stat"><h3>จำนวนบิลเดือนนี้</h3><div class="val" id="mOrders">0</div></div>
-          <div class="stat"><h3>เฉลี่ย/บิล เดือนนี้</h3><div class="val" id="mAvg">0</div></div>
-        </div>
-
-        <div>
-          <h3 style="margin:0 0 8px 0">สรุปรายวันในเดือนที่เลือก</h3>
-          <table id="mByDay">
-            <thead><tr><th>วันที่</th><th class="right">จำนวนบิล</th><th class="right">ยอดรวม (บาท)</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+  <section class="panel">
+    <h2>ตะกร้าสินค้า</h2>
+    <table>
+      <thead>
+        <tr><th>รายการ</th><th>ชนิด</th><th>ราคา</th><th>จำนวน</th><th>รวม</th><th></th></tr>
+      </thead>
+      <tbody id="cartBody"><tr><td colspan="6" class="muted">ยังไม่มีสินค้า</td></tr></tbody>
+    </table>
+    <div class="summary">
+      <div class="row"><span>ยอดรวม</span><span id="total">0</span></div>
+      <button class="btn-accent" onclick="checkout()">คิดเงิน</button>
+      <button class="btn-danger" onclick="clearCart()">ล้างตะกร้า</button>
     </div>
   </section>
+</main>
 
 <script>
-/** ---------- CONFIG ---------- */
-const PRICE_PER_SLICE = 25;
-const PRICE_PER_TRAY  = 189;
-const SLICES_PER_TRAY = 8;
-
 const MENU = [
-  { id: 'haw',  name: 'พิซซ่าฮาวาเอี้ย', desc: 'แป้งพิซซ่านุ่มๆ พร้อมกับปูอัดแฮมและสัปรดเสริฟคู่กับชีสเยิ้มๆ' },
-  { id: 'spin', name: 'ผักโขมแฮมชีส',   desc: 'แป้งพิซซ่านุ่มๆ ผักโขมคัดอย่างดีพร้อมแฮมหอมๆ ชีสยืดๆ' },
-  { id: 'bac',  name: 'เบค่อนชีส',       desc: 'แป้งพิซซ่านุ่มๆ เอาใจสายเบค่อนหอมๆพร้อมชีสยืดๆ' },
-  { id: 'saus', name: 'ไส้กรอกชีส',      desc: 'แป้งพิซซ่านุ่มๆ พร้อมกับไส้กรอก พร้อมชีสยืดๆ' },
-  { id: 'ham',  name: 'แฮมชีส',          desc: 'แป้งพิซซ่านุ่มๆ แฮมคู่กับชีสเยิ้มๆ' },
-  { id: 'corn', name: 'ข้าวโพดชีส',      desc: 'แป้งพิซซ่านุ่มๆ ข้าวโพดคัดอย่างดีพร้อมกับชีสยืดๆ' },
-  { id: 'sea',  name: 'ซีฟู้ด',          desc: 'แป้งพิซซ่านุ่มๆ ยกทะเลมาทั้งหมดไม่ว่าจะเป็นกุ้ง หอย หมึก พร้อมชีสเยิ้มๆ' },
+  { id:'haw', name:'พิซซ่าฮาวาเอี้ย', desc:'แป้งพิซซ่านุ่มๆ พร้อมกับปูอัดแฮมและสัปรดเสริฟคู่กับชีสเยิ้มๆ' },
+  { id:'spin', name:'ผักโขมแฮมชีส', desc:'แป้งพิซซ่านุ่มๆ ผักโขมคัดอย่างดีพร้อมแฮมหอมๆ ชีสยืดๆ' },
+  { id:'bac', name:'เบค่อนชีส', desc:'แป้งพิซซ่านุ่มๆ เอาใจสายเบค่อนหอมๆพร้อมชีสยืดๆ' },
+  { id:'saus', name:'ไส้กรอกชีส', desc:'แป้งพิซซ่านุ่มๆ พร้อมกับไส้กรอก พร้อมชีสยืดๆ' },
+  { id:'ham', name:'แฮมชีส', desc:'แป้งพิซซ่านุ่มๆ แฮมคู่กับชีสเยิ้มๆ' },
+  { id:'corn', name:'ข้าวโพดชีส', desc:'แป้งพิซซ่านุ่มๆ ข้าวโพดคัดอย่างดีพร้อมกับชีสยืดๆ' },
+  { id:'sea', name:'ซีฟู้ด', desc:'แป้งพิซซ่านุ่มๆ ยกทะเลมาทั้งหมดไม่ว่าจะเป็นกุ้ง หอย หมึก พร้อมชีสเยิ้มๆ' }
 ];
+const PRICE_SLICE = 25;
+const PRICE_TRAY = 189;
 
-/** ---------- STORAGE ---------- */
-const LS_KEY = 'thepizza_orders_v1';
-const loadOrders = () => JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-const saveOrders = (arr) => localStorage.setItem(LS_KEY, JSON.stringify(arr));
-
-/** ---------- STATE ---------- */
-let cart = []; // {id, name, type:'slice'|'tray', qty, unit, subtotal}
-
-/** ---------- HELPERS ---------- */
-const money = n => (Math.round(n)).toLocaleString('th-TH');
-const ymd = d => {
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-};
-const ym = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-const parseISO = s => new Date(s);
-
-function addItem(id, type){
-  const menu = MENU.find(m => m.id===id);
-  const unit = type==='slice' ? PRICE_PER_SLICE : PRICE_PER_TRAY;
-  const key = cart.findIndex(it => it.id===id && it.type===type);
-  if(key>-1){ cart[key].qty++; cart[key].subtotal = cart[key].qty * cart[key].unit; }
-  else{ cart.push({ id, name:menu.name, type, qty:1, unit, subtotal:unit }); }
-  renderCart();
-}
-
-function inc(i){ cart[i].qty++; cart[i].subtotal = cart[i].qty*cart[i].unit; renderCart(); }
-function dec(i){
-  cart[i].qty--; if(cart[i].qty<=0){ cart.splice(i,1); }
-  else{ cart[i].subtotal = cart[i].qty*cart[i].unit; }
-  renderCart();
-}
-function removeRow(i){ cart.splice(i,1); renderCart(); }
-
-function clearCart(){
-  if(confirm('ล้างรายการทั้งหมด?')){ cart = []; renderCart(); }
-}
-
-/** Best price per flavor: group slices into trays where cheaper */
-function optimize(){
-  const byFlavor = {};
-  cart.forEach(it=>{
-    if(!byFlavor[it.id]) byFlavor[it.id] = { name: it.name, slices:0, trays:0 };
-    if(it.type==='slice') byFlavor[it.id].slices += it.qty;
-    else byFlavor[it.id].trays += it.qty;
-  });
-
-  let newCart = [];
-  for(const [id, v] of Object.entries(byFlavor)){
-    const totalSlices = v.slices + v.trays*SLICES_PER_TRAY;
-    let best = { trays:0, slices:totalSlices, cost: totalSlices*PRICE_PER_SLICE };
-    const maxTrays = Math.floor(totalSlices / SLICES_PER_TRAY);
-    for(let t=0;t<=maxTrays;t++){
-      const s = totalSlices - t*SLICES_PER_TRAY;
-      const cost = t*PRICE_PER_TRAY + s*PRICE_PER_SLICE;
-      if(cost < best.cost) best = { trays:t, slices:s, cost };
-    }
-    if(best.trays>0){
-      newCart.push({ id, name:v.name, type:'tray', qty:best.trays, unit:PRICE_PER_TRAY, subtotal:best.trays*PRICE_PER_TRAY });
-    }
-    if(best.slices>0){
-      newCart.push({ id, name:v.name, type:'slice', qty:best.slices, unit:PRICE_PER_SLICE, subtotal:best.slices*PRICE_PER_SLICE });
-    }
-  }
-  cart = newCart;
-  renderCart(true);
-}
-
-function totals(){
-  // show saving = (if sold as slice only) - best composition
-  const byFlavor = {};
-  cart.forEach(it=>{
-    if(!byFlavor[it.id]) byFlavor[it.id]={ slices:0, trays:0 };
-    if(it.type==='slice') byFlavor[it.id].slices += it.qty;
-    else byFlavor[it.id].trays += it.qty;
-  });
-  let bestPrice = 0, sliceOnly = 0;
-  for(const f of Object.values(byFlavor)){
-    const totalSlices = f.slices + f.trays*SLICES_PER_TRAY;
-    bestPrice += f.trays*PRICE_PER_TRAY + f.slices*PRICE_PER_SLICE;
-    sliceOnly += totalSlices * PRICE_PER_SLICE;
-  }
-  const saving = Math.max(0, sliceOnly - bestPrice);
-  return { rawSubtotal: sliceOnly, saving, grand: bestPrice };
-}
-
+let cart = [];
 function renderMenu(){
-  const g = document.getElementById('menuGrid');
-  g.innerHTML = MENU.map(m => `
-    <article class="card">
+  const menu = document.getElementById('menuGrid');
+  menu.innerHTML = MENU.map(m => `
+    <div class="card">
       <h3>${m.name}</h3>
       <p class="desc">${m.desc}</p>
       <div class="actions">
-        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">+ ชิ้น (฿${PRICE_PER_SLICE})</button>
-        <button class="btn-add-tray"  onclick="addItem('${m.id}','tray')">+ ถาด (฿${PRICE_PER_TRAY})</button>
+        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">+ ชิ้น</button>
+        <button class="btn-add-tray" onclick="addItem('${m.id}','tray')">+ ถาด</button>
       </div>
-    </article>
+    </div>
   `).join('');
 }
-
-function renderCart(skipAutoEmpty){
+function addItem(id,type){
+  const found = cart.find(i=>i.id===id && i.type===type);
+  const price = type==='slice'?PRICE_SLICE:PRICE_TRAY;
+  const name = MENU.find(m=>m.id===id).name;
+  if(found){ found.qty++; found.total = found.qty*price; }
+  else{ cart.push({id,name,type,qty:1,total:price}); }
+  renderCart();
+}
+function renderCart(){
   const body = document.getElementById('cartBody');
-  body.innerHTML = '';
   if(cart.length===0){
-    body.innerHTML = `<tr id="emptyRow"><td colspan="6" class="muted">ยังไม่มีสินค้าในตะกร้า</td></tr>`;
-  }else{
-    cart.forEach((it,i)=>{
-      body.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${it.name}</td>
-          <td class="right">${it.type==='slice'?'ชิ้น':'ถาด'}</td>
-          <td class="right">฿${money(it.unit)}</td>
-          <td class="right qty">
-            <span class="qty-ctrl">
-              <button onclick="dec(${i})">−</button>
-              <span class="num">${it.qty}</span>
-              <button onclick="inc(${i})">+</button>
-            </span>
-          </td>
-          <td class="right">฿${money(it.subtotal)}</td>
-          <td class="right"><button class="btn-danger" onclick="removeRow(${i})">ลบ</button></td>
-        </tr>
-      `);
-    });
-  }
-  const t = totals();
-  document.getElementById('rawSubtotal').textContent = '฿' + money(t.rawSubtotal);
-  document.getElementById('saving').textContent = '฿' + money(t.saving);
-  document.getElementById('grandTotal').textContent = '฿' + money(t.grand);
-
-  const method = document.getElementById('payMethod').value;
-  const cash = parseFloat(document.getElementById('cashInput').value||0);
-  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
-  document.getElementById('change').textContent = '฿' + money(change);
-}
-
-function buildReceipt(method, cash, change){
-  const now = new Date();
-  const meta = [
-    `วันที่: ${now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}`,
-    `เวลา: ${now.toLocaleTimeString('th-TH')}`,
-    `ลูกค้า: ${document.getElementById('customerName').value || '-'}`
-  ].join(' | ');
-  document.getElementById('receiptMeta').textContent = meta;
-
-  const rBody = document.getElementById('receiptBody');
-  rBody.innerHTML = '';
-  let merged = {};
-  cart.forEach(it=>{
-    const k = it.id+'-'+it.type;
-    if(!merged[k]) merged[k]={ name:it.name, type:it.type, qty:0, subtotal:0 };
-    merged[k].qty += it.qty;
-    merged[k].subtotal += it.subtotal;
-  });
-  Object.values(merged).forEach(it=>{
-    rBody.insertAdjacentHTML('beforeend', `
-      <tr>
-        <td>${it.name}</td>
-        <td class="right">${it.type==='slice'?'ชิ้น':'ถาด'}</td>
-        <td class="right">${it.qty}</td>
-        <td class="right">฿${money(it.subtotal)}</td>
-      </tr>
-    `);
-  });
-
-  const t = totals();
-  document.getElementById('rRaw').textContent   = '฿' + money(t.rawSubtotal);
-  document.getElementById('rSave').textContent  = '฿' + money(t.saving);
-  document.getElementById('rTotal').textContent = '฿' + money(t.grand);
-  document.getElementById('rPayMethod').textContent = method==='cash'?'เงินสด':(method==='transfer'?'โอน/QR':'บัตร');
-
-  document.getElementById('rCash').textContent   = '฿' + money(cash);
-  document.getElementById('rChange').textContent = '฿' + money(change);
-}
-
-function downloadJSON(){
-  const data = buildOrderPayload(); // uses current cart totals, etc.
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `order-${Date.now()}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function buildOrderPayload(){
-  const t = totals();
-  const method = document.getElementById('payMethod').value;
-  const cash = parseFloat(document.getElementById('cashInput').value||0);
-  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
-  // Flatten cart items for storage
-  const items = cart.map(c => ({ id:c.id, name:c.name, type:c.type, qty:c.qty, unit:c.unit, subtotal:c.subtotal }));
-  // Count pieces/trays for stats
-  let totalSlices=0, totalTrays=0;
-  items.forEach(i=>{
-    if(i.type==='slice') totalSlices += i.qty;
-    else totalTrays += i.qty;
-  });
-
-  return {
-    id: 'O' + Date.now(),
-    ts: new Date().toISOString(),
-    customer: document.getElementById('customerName').value || null,
-    items,
-    counts: { slices: totalSlices, trays: totalTrays },
-    totals: { raw: t.rawSubtotal, saving: t.saving, grand: t.grand },
-    payment: { method, cash: method==='cash'?cash:0, change }
-  };
-}
-
-/** ---------- CHECKOUT (PAY) ---------- */
-function checkout(){
-  if(cart.length===0){ alert('ยังไม่มีสินค้าในตะกร้า'); return; }
-  optimize(); // ensure best price
-  const t = totals();
-  const method = document.getElementById('payMethod').value;
-  const cash = parseFloat(document.getElementById('cashInput').value||0);
-  if(method==='cash' && cash < t.grand){
-    alert('เงินสดไม่พอชำระ กรุณาใส่จำนวนเงินให้มากกว่าหรือเท่ากับยอดสุทธิ');
+    body.innerHTML = `<tr><td colspan="6" class="muted">ยังไม่มีสินค้า</td></tr>`;
+    document.getElementById('total').textContent = 0;
     return;
   }
-  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
-
-  // Build receipt UI and print
-  buildReceipt(method, cash, change);
-  window.print();
-
-  // Save order to history
-  const orders = loadOrders();
-  orders.push(buildOrderPayload());
-  saveOrders(orders);
-
-  // Reset cart for next order
-  cart = [];
-  document.getElementById('cashInput').value = '';
-  document.getElementById('customerName').value = '';
-  renderCart();
-
-  // Refresh analytics views (if userเปิดหน้า)
-  renderDaily();
-  populateMonths();
-  renderMonthView();
+  body.innerHTML = cart.map((c,i)=>`
+    <tr>
+      <td>${c.name}</td>
+      <td>${c.type==='slice'?'ชิ้น':'ถาด'}</td>
+      <td>${c.type==='slice'?PRICE_SLICE:PRICE_TRAY}</td>
+      <td>${c.qty}</td>
+      <td>${c.total}</td>
+      <td><button class="btn-danger" onclick="removeItem(${i})">ลบ</button></td>
+    </tr>
+  `).join('');
+  const total = cart.reduce((s,i)=>s+i.total,0);
+  document.getElementById('total').textContent = total;
 }
-
-/** ---------- DAILY SUMMARY ---------- */
-function renderDaily(){
-  const today = ymd(new Date());
-  const orders = loadOrders().filter(o => ymd(parseISO(o.ts)) === today);
-
-  const sum = orders.reduce((s,o)=> s + (o.totals?.grand||0), 0);
-  const count = orders.length;
-  const avg = count? (sum / count) : 0;
-
-  let slices=0, trays=0;
-  let payCount = { cash:0, transfer:0, card:0 };
-  let menuCounter = {}; // count total slices-equivalent per menu
-  orders.forEach(o=>{
-    slices += o.counts?.slices||0;
-    trays  += o.counts?.trays||0;
-    if(o.payment?.method) payCount[o.payment.method]++;
-    (o.items||[]).forEach(it=>{
-      const eq = it.type==='tray' ? it.qty*SLICES_PER_TRAY : it.qty;
-      menuCounter[it.name] = (menuCounter[it.name]||0) + eq;
-    });
-  });
-
-  document.getElementById('dSum').textContent    = '฿' + money(sum);
-  document.getElementById('dOrders').textContent = money(count);
-  document.getElementById('dSlices').textContent = money(slices);
-  document.getElementById('dTrays').textContent  = money(trays);
-  document.getElementById('dAvg').textContent    = '฿' + money(avg);
-
-  const mix = `สด ${payCount.cash||0} | โอน ${payCount.transfer||0} | บัตร ${payCount.card||0}`;
-  document.getElementById('dPayMix').textContent = mix;
-
-  // last 10 orders
-  const tbody = document.querySelector('#dLastTable tbody');
-  tbody.innerHTML = '';
-  orders.slice(-10).reverse().forEach(o=>{
-    const t = new Date(o.ts);
-    tbody.insertAdjacentHTML('beforeend',
-      `<tr><td>${t.toLocaleTimeString('th-TH')}</td><td class="right">฿${money(o.totals.grand)}</td><td>${o.payment.method==='cash'?'เงินสด':(o.payment.method==='transfer'?'โอน/QR':'บัตร')}</td></tr>`);
-  });
-
-  // top menus
-  const top = Object.entries(menuCounter).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const tBody = document.querySelector('#dTopTable tbody');
-  tBody.innerHTML = '';
-  top.forEach(([name,eq])=>{
-    tBody.insertAdjacentHTML('beforeend', `<tr><td>${name}</td><td class="right">${money(eq)}</td></tr>`);
-  });
+function removeItem(i){ cart.splice(i,1); renderCart(); }
+function clearCart(){ cart=[]; renderCart(); }
+function checkout(){
+  alert('ยอดชำระรวม: '+cart.reduce((s,i)=>s+i.total,0)+' บาท');
 }
-
-/** ---------- MONTHLY HISTORY ---------- */
-function getAllMonths(){
-  const orders = loadOrders();
-  const set = new Set(orders.map(o=> {
-    const d = parseISO(o.ts); return ym(d);
-  }));
-  // Always include current month
-  set.add(ym(new Date()));
-  return Array.from(set).sort().reverse(); // latest first
-}
-
-function populateMonths(){
-  const sel = document.getElementById('monthPicker');
-  const months = getAllMonths();
-  const current = ym(new Date());
-  sel.innerHTML = months.map(m => `<option value="${m}" ${m===current?'selected':''}>${m}</option>`).join('');
-}
-
-function renderMonthView(){
-  const sel = document.getElementById('monthPicker');
-  const [yy,mm] = sel.value.split('-').map(x=>parseInt(x,10));
-  const orders = loadOrders().filter(o=>{
-    const d = parseISO(o.ts);
-    return d.getFullYear()===yy && (d.getMonth()+1)===mm;
-  });
-
-  const sum = orders.reduce((s,o)=> s + (o.totals?.grand||0), 0);
-  const count = orders.length;
-  const avg = count? (sum / count) : 0;
-
-  document.getElementById('mSum').textContent    = '฿' + money(sum);
-  document.getElementById('mOrders').textContent = money(count);
-  document.getElementById('mAvg').textContent    = '฿' + money(avg);
-
-  // By day
-  const byDay = {};
-  orders.forEach(o=>{
-    const d = ymd(parseISO(o.ts));
-    byDay[d] = (byDay[d]||0) + (o.totals?.grand||0);
-  });
-  // Also count orders per day
-  const byDayCount = {};
-  orders.forEach(o=>{
-    const d = ymd(parseISO(o.ts));
-    byDayCount[d] = (byDayCount[d]||0) + 1;
-  });
-
-  const tbody = document.querySelector('#mByDay tbody');
-  tbody.innerHTML = '';
-  Object.keys(byDay).sort().forEach(d=>{
-    tbody.insertAdjacentHTML('beforeend',
-      `<tr><td>${d}</td><td class="right">${money(byDayCount[d])}</td><td class="right">฿${money(byDay[d])}</td></tr>`);
-  });
-}
-
-/** ---------- CSV EXPORT & DATA RESET ---------- */
-function exportMonthCSV(){
-  const month = document.getElementById('monthPicker').value;
-  const [yy,mm] = month.split('-').map(x=>parseInt(x,10));
-  const orders = loadOrders().filter(o=>{
-    const d = parseISO(o.ts);
-    return d.getFullYear()===yy && (d.getMonth()+1)===mm;
-  });
-
-  let lines = ['id,datetime,customer,payment,grand,saving,raw,slices,trays'];
-  orders.forEach(o=>{
-    const line = [
-      o.id,
-      o.ts,
-      (o.customer||''),
-      o.payment?.method||'',
-      o.totals?.grand||0,
-      o.totals?.saving||0,
-      o.totals?.raw||0,
-      o.counts?.slices||0,
-      o.counts?.trays||0
-    ].map(v => (String(v).includes(',')? `"${String(v).replace(/"/g,'""')}"` : v));
-    lines.push(line.join(','));
-  });
-
-  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `thepizza-${month}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function wipeAllData(){
-  if(confirm('ลบประวัติยอดขายทั้งหมดบนเครื่องนี้?')){ localStorage.removeItem(LS_KEY); renderDaily(); populateMonths(); renderMonthView(); }
-}
-
-/** ---------- NAV ---------- */
-function switchView(view){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelector('.view.'+view).classList.add('active');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelector(`.tab[data-view="${view}"]`).classList.add('active');
-
-  if(view==='daily') renderDaily();
-  if(view==='history'){ populateMonths(); renderMonthView(); }
-}
-
-/** ---------- INIT ---------- */
 renderMenu();
 renderCart();
-
-// POS events
-document.getElementById('optimizeBtn').addEventListener('click', optimize);
-document.getElementById('clearBtn').addEventListener('click', clearCart);
-document.getElementById('cashInput').addEventListener('input', ()=>renderCart(true));
-document.getElementById('payMethod').addEventListener('change', ()=>{
-  const pm = document.getElementById('payMethod').value;
-  document.getElementById('cashInput').disabled = (pm!=='cash');
-  renderCart(true);
-});
-document.getElementById('downloadBtn').addEventListener('click', downloadJSON);
-document.getElementById('checkoutBtn').addEventListener('click', checkout);
-
-// NAV events
-document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click', ()=> switchView(b.dataset.view)));
-
-// History events
-document.getElementById('exportCSV').addEventListener('click', exportMonthCSV);
-document.getElementById('wipeData').addEventListener('click', wipeAllData);
-document.getElementById('monthPicker').addEventListener('change', renderMonthView);
-
-// defaults
-document.getElementById('cashInput').disabled = false;
 </script>
 </body>
 </html>
