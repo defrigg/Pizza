@@ -3,73 +3,83 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>The Pizza | POS</title>
+<title>The Pizza | POS + รายวัน + ประวัติรายได้ + พร้อมเพย์</title>
 <style>
   :root{
-    --bg:#121212;           /* พื้นหลังเข้ม */
-    --panel:#1a1a1a;        /* พื้น panel */
-    --soft:#242424;         /* พื้นปุ่ม */
-    --soft-2:#2e2e2e;       /* พื้นปุ่ม hover */
-    --text:#ffffff;         /* สีตัวอักษรหลัก */
-    --muted:#c9c9c9;        /* สีตัวอักษรรอง */
-    --accent:#28a745;       /* เขียวหลัก (ปุ่มยืนยัน/คิดเงิน) */
-    --danger:#dc3545;       /* แดงหลัก (ปุ่มลบ/เพิ่มชิ้น) */
-    --warn:#ffc107;         /* เหลือง (ปุ่มเตือน/คำนวณ) */
-    --border:#333333;       /* เส้นขอบ */
+    /* --- Red / Green Theme --- */
+    --bg:#151515;           /* พื้นหลังหลัก */
+    --panel:#1b1b1b;        /* พื้น panel */
+    --soft:#222;            /* การ์ด/ปุ่มรอง */
+    --soft-2:#2a2a2a;       /* ปุ่มรอง hover */
+    --text:#f8f8f8;         /* ข้อความหลัก */
+    --muted:#cfcfcf;        /* ข้อความรอง */
+    --accent:#28a745;       /* เขียวหลัก (ยืนยัน/คิดเงิน/+ถาด) */
+    --danger:#e53935;       /* แดงหลัก (ลบ/+ชิ้น) */
+    --warn:#ffc107;         /* เหลือง (คำนวณ/แจ้งเตือน) */
+    --border:#333;          /* เส้นขอบ */
+    --overlay:#0009;        /* โมดัล */
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,TH Sarabun New,Prompt,sans-serif;
-    color:var(--text);
-    background:var(--bg);
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,TH Sarabun New,Prompt,sans-serif;
+    color:var(--text); background:var(--bg);
   }
   header{
-    position:sticky; top:0; z-index:10;
-    background:var(--panel);
+    position:sticky; top:0; z-index:10; backdrop-filter: blur(6px);
+    background:linear-gradient(90deg, #1b1b1b 0%, #231717 50%, #1b221b 100%);
     border-bottom:1px solid var(--border);
   }
   .wrap{max-width:1200px; margin:0 auto; padding:16px}
-  .brand{
-    display:flex; align-items:center; gap:12px;
-  }
+  .brand{display:flex; align-items:center; gap:12px;}
   .logo{
     width:44px; height:44px; border-radius:12px;
-    background:linear-gradient(45deg, var(--danger), var(--accent));
-    display:grid; place-items:center;
-    font-weight:900; color:#fff;
-    border:2px solid #0007;
+    background:conic-gradient(from 200deg at 50% 50%, var(--danger), #ff7043, var(--accent), #66bb6a, var(--danger));
+    display:grid; place-items:center; font-weight:900; color:#fff; border:2px solid #0007;
+    box-shadow:0 6px 20px #00000055, inset 0 0 20px #ffffff11;
   }
-  .brand h1{margin:0; font-size:22px}
+  .brand h1{margin:0; font-size:22px; letter-spacing:.5px}
   .price-strip{display:flex; gap:12px; color:var(--muted); font-size:14px; flex-wrap:wrap}
   .pill{background:var(--soft); padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
+  .nav{display:flex; gap:6px; flex-wrap:wrap}
+  .tab{
+    background:var(--soft); border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer; color:var(--text)
+  }
+  .tab.active{background:#213021; border-color:#355c35; color:#dcffe4}
+  .settings-btn{margin-left:8px}
+
   main{display:grid; grid-template-columns:1.3fr .7fr; gap:16px; padding:16px}
   @media (max-width: 900px){ main{grid-template-columns:1fr} }
-
   .panel{background:var(--panel); border:1px solid var(--border); border-radius:16px}
   .panel h2{margin:0; padding:16px; border-bottom:1px solid var(--border); font-size:18px}
+
+  /* Menu grid */
   .menu{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; padding:16px}
   .card{
     background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px;
     transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
   }
-  .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px #0006; border-color:var(--accent)}
+  .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px #0006; border-color:#3c6b3c}
   .card h3{margin:0 0 6px 0; font-size:16px}
   .desc{color:var(--muted); font-size:13px; line-height:1.35; min-height:3.6em}
   .actions{display:flex; gap:8px; margin-top:auto}
 
+  /* Buttons */
   button{
-    cursor:pointer; border:none; border-radius:10px; padding:10px 12px;
-    color:#fff; font-weight:600;
+    cursor:pointer; border:none; border-radius:10px; padding:10px 12px; background:var(--soft-2); color:var(--text);
+    border:1px solid var(--border); font-weight:700
   }
   button:hover{filter:brightness(1.05)}
-  .btn-add-piece{background:var(--danger);}
-  .btn-add-tray{background:var(--accent);}
-  .btn-danger{background:var(--danger);}
-  .btn-accent{background:var(--accent);}
-  .btn-warn{background:var(--warn); color:#000;}
-  
+  .btn-add-piece{background:var(--danger); border-color:#8a1e1c;}
+  .btn-add-tray{background:var(--accent); border-color:#1f7a33;}
+  .btn-danger{background:var(--danger); border-color:#8a1e1c; color:#fff}
+  .btn-accent{background:var(--accent); border-color:#1f7a33; color:#fff}
+  .btn-warn{background:var(--warn); border-color:#cc9a06; color:#000}
+
+  /* Cart */
+  .cart-wrap{padding:0}
+  .cart-body{padding:12px 16px}
+  .cart-tools{display:flex; gap:8px; padding:12px 16px; border-top:1px dashed var(--border); flex-wrap:wrap}
   table{width:100%; border-collapse:collapse}
   th, td{padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; font-size:14px}
   th{color:var(--muted); font-weight:600}
@@ -82,115 +92,728 @@
   .summary{padding:12px 16px; border-top:1px solid var(--border); display:grid; gap:6px}
   .summary .row{display:flex; justify-content:space-between; font-size:15px}
   .summary .total{font-size:20px; font-weight:800}
+  .flex{display:flex; gap:8px; align-items:center}
+  input[type="number"], input[type="text"], select{
+    background:#101010; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; width:100%
+  }
 
+  /* Views */
+  .view{display:none}
+  .view.active{display:block}
+
+  /* Daily & History */
+  .grid{display:grid; gap:12px; padding:16px}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px}
+  .stat{background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:12px}
+  .stat h3{margin:0 0 8px 0; font-size:14px; color:var(--muted)}
+  .stat .val{font-size:22px; font-weight:800}
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+
+  /* Modal */
+  .modal{position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; z-index:50}
+  .modal.show{display:flex}
+  .modal-card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; width:min(560px,92vw)}
+  .modal-card h3{margin:0 0 8px 0}
+  .qr-wrap{display:grid; place-items:center; padding:12px; background:#101510; border:1px solid var(--border); border-radius:12px}
+  .rowx{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+  /* Receipt print */
   @media print{
-    header, .menu, .cart-tools{display:none !important}
+    header, .menu, .cart-tools, .nav, .view:not(.pos), .modal{display:none !important}
     main{grid-template-columns:1fr !important}
     .panel{border:none}
     body{background:#fff; color:#000}
+    .summary .total{font-size:18px}
+    .print-only{display:block !important}
   }
+  .print-only{display:none}
+  .saving{color:#76ff9b; font-weight:700}
+  .badge{font-size:12px; padding:2px 8px; border-radius:999px; background:#2a3b2a; border:1px solid #3f5f3f; color:#dbffe6}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;">
-    <div class="brand">
-      <div class="logo">🍕</div>
-      <div>
-        <h1>The Pizza</h1>
-        <div class="price-strip">
-          <span class="pill">ชิ้นละ 25 บาท</span>
-          <span class="pill">ถาดละ 189 บาท</span>
-          <span class="pill">1 ถาด = 8 ชิ้น</span>
+  <header>
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div class="brand">
+        <div class="logo">🍕</div>
+        <div>
+          <h1>The Pizza</h1>
+          <div class="price-strip">
+            <span class="pill">ชิ้นละ <b>25</b> บาท</span>
+            <span class="pill">ถาดละ <b>189</b> บาท</span>
+            <span class="pill">1 ถาด = <b>8</b> ชิ้น</span>
+          </div>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="tab active" data-view="pos">ขาย (POS)</button>
+        <button class="tab" data-view="daily">สรุปรายวัน</button>
+        <button class="tab" data-view="history">ประวัติรายได้ (รายเดือน)</button>
+        <button class="tab settings-btn" id="openSettings">ตั้งค่า พร้อมเพย์</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- POS VIEW -->
+  <section class="view pos active">
+    <main class="wrap">
+      <!-- Menu -->
+      <section class="panel">
+        <h2>เมนูพิซซ่า</h2>
+        <div class="menu" id="menuGrid"></div>
+      </section>
+
+      <!-- Cart / POS -->
+      <section class="panel cart-wrap">
+        <h2>ตะกร้าสินค้า</h2>
+        <div class="cart-body">
+          <table id="cartTable">
+            <thead>
+              <tr>
+                <th>รายการ</th>
+                <th class="right">ชนิด</th>
+                <th class="right">ราคา/หน่วย</th>
+                <th class="right">จำนวน</th>
+                <th class="right">รวม</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              <tr id="emptyRow"><td colspan="6" class="muted">ยังไม่มีสินค้าในตะกร้า</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cart-tools">
+          <button class="btn-warn" id="optimizeBtn">คำนวณราคาดีที่สุด (จัดถาดอัตโนมัติ)</button>
+          <button class="btn-danger" id="clearBtn">ล้างรายการ</button>
+          <span class="badge">ระบบคิดถูกสุดระหว่าง “ชิ้น” และ “ถาด” ต่อรส</span>
+        </div>
+
+        <div class="summary">
+          <div class="row"><span>ยอดก่อนปรับ</span><span class="right" id="rawSubtotal">0</span></div>
+          <div class="row"><span>ส่วนต่างประหยัด</span><span class="right saving" id="saving">0</span></div>
+          <div class="row total"><span>ยอดสุทธิ</span><span class="right" id="grandTotal">0</span></div>
+
+          <div class="row" style="gap:8px; align-items:center">
+            <span>วิธีชำระ</span>
+            <span style="min-width:200px">
+              <select id="payMethod">
+                <option value="cash">เงินสด</option>
+                <option value="transfer">โอน/QR พร้อมเพย์</option>
+                <option value="card">บัตร</option>
+              </select>
+            </span>
+            <span style="min-width:180px"><input id="cashInput" type="number" min="0" step="1" placeholder="รับเงินสด (บาท)"></span>
+            <button id="showQR" style="display:none">แสดง QR พร้อมเพย์</button>
+            <span>เงินทอน</span><span class="right" id="change">0</span>
+          </div>
+
+          <div class="flex" style="margin-top:8px; flex-wrap:wrap">
+            <button class="btn-accent" id="checkoutBtn">คิดเงิน & พิมพ์ใบเสร็จ</button>
+            <button id="downloadBtn">บันทึกออเดอร์ (.json)</button>
+            <input id="customerName" type="text" placeholder="ชื่อลูกค้า (ถ้ามี)" />
+          </div>
+          <div class="muted" style="font-size:12px">* กด “คิดเงิน” เพื่อบันทึกยอดขายลงประวัติอัตโนมัติ</div>
+        </div>
+
+        <!-- Receipt (print view) -->
+        <div class="print-only" id="printArea">
+          <h2 style="margin:8px 0 0 0">The Pizza — ใบเสร็จรับเงิน</h2>
+          <div id="receiptMeta" style="font-size:13px; color:#444"></div>
+          <table style="margin-top:8px">
+            <thead>
+              <tr><th>รายการ</th><th class="right">ชนิด</th><th class="right">จำนวน</th><th class="right">ราคา</th></tr>
+            </thead>
+            <tbody id="receiptBody"></tbody>
+          </table>
+          <div style="margin-top:8px; display:grid; gap:4px; max-width:360px; margin-left:auto">
+            <div style="display:flex; justify-content:space-between"><span>ยอดก่อนปรับ</span><b id="rRaw">0</b></div>
+            <div style="display:flex; justify-content:space-between"><span>ส่วนต่างประหยัด</span><b id="rSave">0</b></div>
+            <div style="display:flex; justify-content:space-between; font-size:18px"><span>ยอดสุทธิ</span><b id="rTotal">0</b></div>
+            <div style="display:flex; justify-content:space-between"><span>วิธีชำระ</span><b id="rPayMethod">-</b></div>
+            <div style="display:flex; justify-content:space-between"><span>รับเงิน</span><b id="rCash">0</b></div>
+            <div style="display:flex; justify-content:space-between"><span>เงินทอน</span><b id="rChange">0</b></div>
+          </div>
+          <!-- QR บนใบเสร็จ -->
+          <div id="receiptQR" style="margin-top:10px; display:none;">
+            <div style="font-size:12px;color:#444;margin-bottom:6px">QR พร้อมเพย์สำหรับบิลนี้</div>
+            <div id="receiptQRCanvas" class="qr-wrap" style="border:1px dashed #ccc;"></div>
+          </div>
+          <p style="margin-top:12px;font-size:12px;color:#444">ขอบคุณที่อุดหนุน 🍕</p>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <!-- DAILY VIEW -->
+  <section class="view daily">
+    <div class="wrap panel">
+      <h2>สรุปยอดขาย “วันนี้”</h2>
+      <div class="grid">
+        <div class="stats">
+          <div class="stat"><h3>ยอดรวม (บาท)</h3><div class="val" id="dSum">0</div></div>
+          <div class="stat"><h3>จำนวนบิล</h3><div class="val" id="dOrders">0</div></div>
+          <div class="stat"><h3>จำนวนชิ้นที่ขาย</h3><div class="val" id="dSlices">0</div></div>
+          <div class="stat"><h3>จำนวนถาดที่ขาย</h3><div class="val" id="dTrays">0</div></div>
+          <div class="stat"><h3>ค่าเฉลี่ยต่อบิล</h3><div class="val" id="dAvg">0</div></div>
+          <div class="stat"><h3>วิธีชำระ (สด/โอน/บัตร)</h3><div class="val" id="dPayMix">-</div></div>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 8px 0">10 ออเดอร์ล่าสุด</h3>
+          <table id="dLastTable">
+            <thead><tr><th>เวลา</th><th>ยอดสุทธิ</th><th>วิธีชำระ</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 8px 0">เมนูขายดี (Top 5)</h3>
+          <table id="dTopTable">
+            <thead><tr><th>เมนู</th><th class="right">ยอดรวม (ชิ้น + ถาด*8)</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </div>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="panel">
-    <h2>เมนูพิซซ่า</h2>
-    <div class="menu" id="menuGrid"></div>
   </section>
-  <section class="panel">
-    <h2>ตะกร้าสินค้า</h2>
-    <table>
-      <thead>
-        <tr><th>รายการ</th><th>ชนิด</th><th>ราคา</th><th>จำนวน</th><th>รวม</th><th></th></tr>
-      </thead>
-      <tbody id="cartBody"><tr><td colspan="6" class="muted">ยังไม่มีสินค้า</td></tr></tbody>
-    </table>
-    <div class="summary">
-      <div class="row"><span>ยอดรวม</span><span id="total">0</span></div>
-      <button class="btn-accent" onclick="checkout()">คิดเงิน</button>
-      <button class="btn-danger" onclick="clearCart()">ล้างตะกร้า</button>
+
+  <!-- HISTORY VIEW -->
+  <section class="view history">
+    <div class="wrap panel">
+      <h2>ประวัติรายได้ (รายเดือน)</h2>
+      <div class="grid">
+        <div class="filter-row">
+          <label>เลือกเดือน: </label>
+          <select id="monthPicker"></select>
+          <button id="exportCSV">ส่งออก CSV</button>
+          <button class="btn-danger" id="wipeData">ลบประวัติทั้งหมด</button>
+          <span class="muted">* เก็บข้อมูลในเครื่องนี้ (localStorage)</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><h3>ยอดรวมเดือนนี้</h3><div class="val" id="mSum">0</div></div>
+          <div class="stat"><h3>จำนวนบิลเดือนนี้</h3><div class="val" id="mOrders">0</div></div>
+          <div class="stat"><h3>เฉลี่ย/บิล เดือนนี้</h3><div class="val" id="mAvg">0</div></div>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 8px 0">สรุปรายวันในเดือนที่เลือก</h3>
+          <table id="mByDay">
+            <thead><tr><th>วันที่</th><th class="right">จำนวนบิล</th><th class="right">ยอดรวม (บาท)</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
-</main>
+
+  <!-- SETTINGS MODAL (PromptPay) -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-card">
+      <h3>ตั้งค่า พร้อมเพย์</h3>
+      <div class="rowx">
+        <div style="flex:1">
+          <label>PromptPay ID / เบอร์ (เช่น 0812345678 หรือ 1XXXXXXXXXXXXX)</label>
+          <input id="ppId" type="text" placeholder="กรอกเบอร์มือถือ หรือ เลขบัตร/นิติบุคคล">
+        </div>
+      </div>
+      <div class="rowx" style="margin-top:8px">
+        <div style="flex:1">
+          <label>ชื่อร้าน/ผู้รับเงิน</label>
+          <input id="ppMerchant" type="text" placeholder="The Pizza">
+        </div>
+        <div style="flex:1">
+          <label>เมือง/จังหวัด</label>
+          <input id="ppCity" type="text" placeholder="Bangkok">
+        </div>
+      </div>
+      <div class="rowx" style="margin-top:12px; justify-content:flex-end">
+        <button id="closeSettings">ยกเลิก</button>
+        <button class="btn-accent" id="saveSettings">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR MODAL -->
+  <div class="modal" id="qrModal">
+    <div class="modal-card">
+      <h3>QR พร้อมเพย์ สำหรับชำระเงิน</h3>
+      <div class="rowx">
+        <div>ยอดชำระ: <b id="qrAmountText">-</b> บาท</div>
+        <div class="pill" id="qrMerchantText" style="margin-left:auto">-</div>
+      </div>
+      <div class="qr-wrap" style="margin-top:10px">
+        <div id="qrCanvas"></div>
+      </div>
+      <div style="margin-top:10px">
+        <label class="muted" style="font-size:12px">EMVCo Payload (กดเพื่อคัดลอก):</label>
+        <input id="qrPayload" type="text" readonly onclick="this.select();document.execCommand('copy')" />
+      </div>
+      <div class="rowx" style="margin-top:12px; justify-content:flex-end">
+        <button id="printQR">พิมพ์ใบเสร็จพร้อม QR</button>
+        <button id="closeQR">ปิด</button>
+      </div>
+      <div class="muted" style="margin-top:8px; font-size:12px">* ไม่มีการยืนยันยอดจากธนาคาร (ออฟไลน์) — โปรดยืนยันการโอนก่อนกด “คิดเงิน”</div>
+    </div>
+  </div>
 
 <script>
-const MENU = [
-  { id:'haw', name:'พิซซ่าฮาวาเอี้ย', desc:'แป้งพิซซ่านุ่มๆ พร้อมกับปูอัดแฮมและสัปรดเสริฟคู่กับชีสเยิ้มๆ' },
-  { id:'spin', name:'ผักโขมแฮมชีส', desc:'แป้งพิซซ่านุ่มๆ ผักโขมคัดอย่างดีพร้อมแฮมหอมๆ ชีสยืดๆ' },
-  { id:'bac', name:'เบค่อนชีส', desc:'แป้งพิซซ่านุ่มๆ เอาใจสายเบค่อนหอมๆพร้อมชีสยืดๆ' },
-  { id:'saus', name:'ไส้กรอกชีส', desc:'แป้งพิซซ่านุ่มๆ พร้อมกับไส้กรอก พร้อมชีสยืดๆ' },
-  { id:'ham', name:'แฮมชีส', desc:'แป้งพิซซ่านุ่มๆ แฮมคู่กับชีสเยิ้มๆ' },
-  { id:'corn', name:'ข้าวโพดชีส', desc:'แป้งพิซซ่านุ่มๆ ข้าวโพดคัดอย่างดีพร้อมกับชีสยืดๆ' },
-  { id:'sea', name:'ซีฟู้ด', desc:'แป้งพิซซ่านุ่มๆ ยกทะเลมาทั้งหมดไม่ว่าจะเป็นกุ้ง หอย หมึก พร้อมชีสเยิ้มๆ' }
-];
-const PRICE_SLICE = 25;
-const PRICE_TRAY = 189;
+/** ---------- CONFIG ---------- */
+const PRICE_PER_SLICE = 25;
+const PRICE_PER_TRAY  = 189;
+const SLICES_PER_TRAY = 8;
 
-let cart = [];
+/** ---------- MENU ---------- */
+const MENU = [
+  { id: 'haw',  name: 'พิซซ่าฮาวาเอี้ย', desc: 'แป้งพิซซ่านุ่มๆ พร้อมกับปูอัดแฮมและสัปรดเสริฟคู่กับชีสเยิ้มๆ' },
+  { id: 'spin', name: 'ผักโขมแฮมชีส',   desc: 'แป้งพิซซ่านุ่มๆ ผักโขมคัดอย่างดีพร้อมแฮมหอมๆ ชีสยืดๆ' },
+  { id: 'bac',  name: 'เบค่อนชีส',       desc: 'แป้งพิซซ่านุ่มๆ เอาใจสายเบค่อนหอมๆพร้อมชีสยืดๆ' },
+  { id: 'saus', name: 'ไส้กรอกชีส',      desc: 'แป้งพิซซ่านุ่มๆ พร้อมกับไส้กรอก พร้อมชีสยืดๆ' },
+  { id: 'ham',  name: 'แฮมชีส',          desc: 'แป้งพิซซ่านุ่มๆ แฮมคู่กับชีสเยิ้มๆ' },
+  { id: 'corn', name: 'ข้าวโพดชีส',      desc: 'แป้งพิซซ่านุ่มๆ ข้าวโพดคัดอย่างดีพร้อมกับชีสยืดๆ' },
+  { id: 'sea',  name: 'ซีฟู้ด',          desc: 'แป้งพิซซ่านุ่มๆ ยกทะเลมาทั้งหมดไม่ว่าจะเป็นกุ้ง หอย หมึก พร้อมชีสเยิ้มๆ' },
+];
+
+/** ---------- STORAGE ---------- */
+const LS_KEY  = 'thepizza_orders_v1';
+const CFG_KEY = 'thepizza_promptpay_cfg_v1';
+const loadOrders = () => JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+const saveOrders = (arr) => localStorage.setItem(LS_KEY, JSON.stringify(arr));
+const loadCfg = () => JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+const saveCfg = (c) => localStorage.setItem(CFG_KEY, JSON.stringify(c));
+
+/** ---------- STATE ---------- */
+let cart = []; // {id, name, type:'slice'|'tray', qty, unit, subtotal}
+
+/** ---------- HELPERS ---------- */
+const money = n => (Math.round(n)).toLocaleString('th-TH');
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const ym  = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const parseISO = s => new Date(s);
+
+/** ---------- POS CORE ---------- */
+function addItem(id, type){
+  const menu = MENU.find(m => m.id===id);
+  const unit = type==='slice' ? PRICE_PER_SLICE : PRICE_PER_TRAY;
+  const key = cart.findIndex(it => it.id===id && it.type===type);
+  if(key>-1){ cart[key].qty++; cart[key].subtotal = cart[key].qty * cart[key].unit; }
+  else{ cart.push({ id, name:menu.name, type, qty:1, unit, subtotal:unit }); }
+  renderCart();
+}
+function inc(i){ cart[i].qty++; cart[i].subtotal = cart[i].qty*cart[i].unit; renderCart(); }
+function dec(i){ cart[i].qty--; if(cart[i].qty<=0){ cart.splice(i,1); } else{ cart[i].subtotal = cart[i].qty*cart[i].unit; } renderCart(); }
+function removeRow(i){ cart.splice(i,1); renderCart(); }
+function clearCart(){ if(confirm('ล้างรายการทั้งหมด?')){ cart = []; renderCart(); } }
+
+function optimize(){
+  const byFlavor = {};
+  cart.forEach(it=>{
+    if(!byFlavor[it.id]) byFlavor[it.id] = { name: it.name, slices:0, trays:0 };
+    if(it.type==='slice') byFlavor[it.id].slices += it.qty;
+    else byFlavor[it.id].trays += it.qty;
+  });
+  let newCart = [];
+  for(const [id, v] of Object.entries(byFlavor)){
+    const totalSlices = v.slices + v.trays*SLICES_PER_TRAY;
+    let best = { trays:0, slices:totalSlices, cost: totalSlices*PRICE_PER_SLICE };
+    const maxTrays = Math.floor(totalSlices / SLICES_PER_TRAY);
+    for(let t=0;t<=maxTrays;t++){
+      const s = totalSlices - t*SLICES_PER_TRAY;
+      const cost = t*PRICE_PER_TRAY + s*PRICE_PER_SLICE;
+      if(cost < best.cost) best = { trays:t, slices:s, cost };
+    }
+    if(best.trays>0) newCart.push({ id, name:v.name, type:'tray', qty:best.trays, unit:PRICE_PER_TRAY, subtotal:best.trays*PRICE_PER_TRAY });
+    if(best.slices>0) newCart.push({ id, name:v.name, type:'slice', qty:best.slices, unit:PRICE_PER_SLICE, subtotal:best.slices*PRICE_PER_SLICE });
+  }
+  cart = newCart; renderCart(true);
+}
+function totals(){
+  const byFlavor = {};
+  cart.forEach(it=>{
+    if(!byFlavor[it.id]) byFlavor[it.id]={ slices:0, trays:0 };
+    if(it.type==='slice') byFlavor[it.id].slices += it.qty; else byFlavor[it.id].trays += it.qty;
+  });
+  let bestPrice = 0, sliceOnly = 0;
+  for(const f of Object.values(byFlavor)){
+    const totalSlices = f.slices + f.trays*SLICES_PER_TRAY;
+    bestPrice += f.trays*PRICE_PER_TRAY + f.slices*PRICE_PER_SLICE;
+    sliceOnly += totalSlices * PRICE_PER_SLICE;
+  }
+  const saving = Math.max(0, sliceOnly - bestPrice);
+  return { rawSubtotal: sliceOnly, saving, grand: bestPrice };
+}
 function renderMenu(){
-  const menu = document.getElementById('menuGrid');
-  menu.innerHTML = MENU.map(m => `
-    <div class="card">
+  const g = document.getElementById('menuGrid');
+  g.innerHTML = MENU.map(m => `
+    <article class="card">
       <h3>${m.name}</h3>
       <p class="desc">${m.desc}</p>
       <div class="actions">
-        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">+ ชิ้น</button>
-        <button class="btn-add-tray" onclick="addItem('${m.id}','tray')">+ ถาด</button>
+        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">+ ชิ้น (฿${PRICE_PER_SLICE})</button>
+        <button class="btn-add-tray"  onclick="addItem('${m.id}','tray')">+ ถาด (฿${PRICE_PER_TRAY})</button>
       </div>
-    </div>
-  `).join('');
-}
-function addItem(id,type){
-  const found = cart.find(i=>i.id===id && i.type===type);
-  const price = type==='slice'?PRICE_SLICE:PRICE_TRAY;
-  const name = MENU.find(m=>m.id===id).name;
-  if(found){ found.qty++; found.total = found.qty*price; }
-  else{ cart.push({id,name,type,qty:1,total:price}); }
-  renderCart();
+    </article>`).join('');
 }
 function renderCart(){
   const body = document.getElementById('cartBody');
+  body.innerHTML = '';
   if(cart.length===0){
-    body.innerHTML = `<tr><td colspan="6" class="muted">ยังไม่มีสินค้า</td></tr>`;
-    document.getElementById('total').textContent = 0;
-    return;
+    body.innerHTML = `<tr id="emptyRow"><td colspan="6" class="muted">ยังไม่มีสินค้าในตะกร้า</td></tr>`;
+  }else{
+    cart.forEach((it,i)=>{
+      body.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td>${it.name}</td>
+          <td class="right">${it.type==='slice'?'ชิ้น':'ถาด'}</td>
+          <td class="right">฿${money(it.unit)}</td>
+          <td class="right qty">
+            <span class="qty-ctrl">
+              <button onclick="dec(${i})">−</button>
+              <span class="num">${it.qty}</span>
+              <button onclick="inc(${i})">+</button>
+            </span>
+          </td>
+          <td class="right">฿${money(it.subtotal)}</td>
+          <td class="right"><button class="btn-danger" onclick="removeRow(${i})">ลบ</button></td>
+        </tr>`);
+    });
   }
-  body.innerHTML = cart.map((c,i)=>`
-    <tr>
-      <td>${c.name}</td>
-      <td>${c.type==='slice'?'ชิ้น':'ถาด'}</td>
-      <td>${c.type==='slice'?PRICE_SLICE:PRICE_TRAY}</td>
-      <td>${c.qty}</td>
-      <td>${c.total}</td>
-      <td><button class="btn-danger" onclick="removeItem(${i})">ลบ</button></td>
-    </tr>
-  `).join('');
-  const total = cart.reduce((s,i)=>s+i.total,0);
-  document.getElementById('total').textContent = total;
+  const t = totals();
+  document.getElementById('rawSubtotal').textContent = '฿' + money(t.rawSubtotal);
+  document.getElementById('saving').textContent = '฿' + money(t.saving);
+  document.getElementById('grandTotal').textContent = '฿' + money(t.grand);
+
+  const method = document.getElementById('payMethod').value;
+  const cash = parseFloat(document.getElementById('cashInput').value||0);
+  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
+  document.getElementById('change').textContent = '฿' + money(change);
+
+  document.getElementById('showQR').style.display = (method==='transfer' && t.grand>0) ? 'inline-block' : 'none';
 }
-function removeItem(i){ cart.splice(i,1); renderCart(); }
-function clearCart(){ cart=[]; renderCart(); }
+function buildReceipt(method, cash, change, payloadForQR){
+  const now = new Date();
+  const meta = [
+    `วันที่: ${now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}`,
+    `เวลา: ${now.toLocaleTimeString('th-TH')}`,
+    `ลูกค้า: ${document.getElementById('customerName').value || '-'}`
+  ].join(' | ');
+  document.getElementById('receiptMeta').textContent = meta;
+
+  const rBody = document.getElementById('receiptBody'); rBody.innerHTML = '';
+  let merged = {};
+  cart.forEach(it=>{
+    const k = it.id+'-'+it.type;
+    if(!merged[k]) merged[k]={ name:it.name, type:it.type, qty:0, subtotal:0 };
+    merged[k].qty += it.qty; merged[k].subtotal += it.subtotal;
+  });
+  Object.values(merged).forEach(it=>{
+    rBody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${it.name}</td>
+        <td class="right">${it.type==='slice'?'ชิ้น':'ถาด'}</td>
+        <td class="right">${it.qty}</td>
+        <td class="right">฿${money(it.subtotal)}</td>
+      </tr>`);
+  });
+
+  const t = totals();
+  document.getElementById('rRaw').textContent   = '฿' + money(t.rawSubtotal);
+  document.getElementById('rSave').textContent  = '฿' + money(t.saving);
+  document.getElementById('rTotal').textContent = '฿' + money(t.grand);
+  document.getElementById('rPayMethod').textContent = method==='cash'?'เงินสด':(method==='transfer'?'โอน/QR':'บัตร');
+  document.getElementById('rCash').textContent   = '฿' + money(cash);
+  document.getElementById('rChange').textContent = '฿' + money(change);
+
+  const receiptQR = document.getElementById('receiptQR');
+  const receiptQRCanvas = document.getElementById('receiptQRCanvas');
+  if(method==='transfer' && payloadForQR){
+    receiptQR.style.display = 'block';
+    receiptQRCanvas.innerHTML = '';
+    QRCode.toCanvas(receiptQRCanvas, payloadForQR, 192);
+  } else {
+    receiptQR.style.display = 'none';
+    receiptQRCanvas.innerHTML = '';
+  }
+}
+function downloadJSON(){
+  const data = buildOrderPayload();
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob); const a = document.createElement('a');
+  a.href = url; a.download = `order-${Date.now()}.json`; a.click(); URL.revokeObjectURL(url);
+}
+function buildOrderPayload(){
+  const t = totals();
+  const method = document.getElementById('payMethod').value;
+  const cash = parseFloat(document.getElementById('cashInput').value||0);
+  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
+  const items = cart.map(c => ({ id:c.id, name:c.name, type:c.type, qty:c.qty, unit:c.unit, subtotal:c.subtotal }));
+  let totalSlices=0, totalTrays=0;
+  items.forEach(i=>{ if(i.type==='slice') totalSlices+=i.qty; else totalTrays+=i.qty; });
+
+  return {
+    id: 'O' + Date.now(), ts: new Date().toISOString(),
+    customer: document.getElementById('customerName').value || null,
+    items, counts: { slices: totalSlices, trays: totalTrays },
+    totals: { raw: t.rawSubtotal, saving: t.saving, grand: t.grand },
+    payment: { method, cash: method==='cash'?cash:0, change }
+  };
+}
+
+/** ---------- CHECKOUT ---------- */
 function checkout(){
-  alert('ยอดชำระรวม: '+cart.reduce((s,i)=>s+i.total,0)+' บาท');
+  if(cart.length===0){ alert('ยังไม่มีสินค้าในตะกร้า'); return; }
+  optimize();
+  const t = totals();
+  const method = document.getElementById('payMethod').value;
+  const cash = parseFloat(document.getElementById('cashInput').value||0);
+  if(method==='cash' && cash < t.grand){ alert('เงินสดไม่พอชำระ'); return; }
+
+  let payloadForQR = '';
+  if(method==='transfer'){
+    const cfg = loadCfg();
+    if(!cfg.id){ alert('ยังไม่ตั้งค่า PromptPay ID (กดปุ่ม “ตั้งค่า พร้อมเพย์”)'); return; }
+    payloadForQR = buildPromptPayPayload(cfg.id, t.grand, cfg.merchant||'The Pizza', cfg.city||'TH');
+  }
+
+  const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
+  buildReceipt(method, cash, change, payloadForQR);
+  window.print();
+
+  const orders = loadOrders();
+  orders.push(buildOrderPayload());
+  saveOrders(orders);
+
+  cart = []; document.getElementById('cashInput').value = '';
+  document.getElementById('customerName').value = ''; renderCart();
+
+  renderDaily(); populateMonths(); renderMonthView();
 }
-renderMenu();
-renderCart();
+
+/** ---------- DAILY & MONTHLY ---------- */
+function renderDaily(){
+  const today = ymd(new Date());
+  const orders = loadOrders().filter(o => ymd(parseISO(o.ts)) === today);
+  const sum = orders.reduce((s,o)=> s + (o.totals?.grand||0), 0);
+  const count = orders.length;
+  const avg = count? (sum / count) : 0;
+  let slices=0, trays=0; let payCount = { cash:0, transfer:0, card:0 }; let menuCounter = {};
+  orders.forEach(o=>{
+    slices += o.counts?.slices||0; trays  += o.counts?.trays||0;
+    if(o.payment?.method) payCount[o.payment.method]++;
+    (o.items||[]).forEach(it=>{
+      const eq = it.type==='tray' ? it.qty*SLICES_PER_TRAY : it.qty;
+      menuCounter[it.name] = (menuCounter[it.name]||0) + eq;
+    });
+  });
+  document.getElementById('dSum').textContent    = '฿' + money(sum);
+  document.getElementById('dOrders').textContent = money(count);
+  document.getElementById('dSlices').textContent = money(slices);
+  document.getElementById('dTrays').textContent  = money(trays);
+  document.getElementById('dAvg').textContent    = '฿' + money(avg);
+  document.getElementById('dPayMix').textContent = `สด ${payCount.cash||0} | โอน ${payCount.transfer||0} | บัตร ${payCount.card||0}`;
+
+  const tbody = document.querySelector('#dLastTable tbody'); tbody.innerHTML = '';
+  orders.slice(-10).reverse().forEach(o=>{
+    const t = new Date(o.ts);
+    tbody.insertAdjacentHTML('beforeend',
+      `<tr><td>${t.toLocaleTimeString('th-TH')}</td><td class="right">฿${money(o.totals.grand)}</td><td>${o.payment.method==='cash'?'เงินสด':(o.payment.method==='transfer'?'โอน/QR':'บัตร')}</td></tr>`);
+  });
+  const top = Object.entries(menuCounter).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const tBody = document.querySelector('#dTopTable tbody'); tBody.innerHTML = '';
+  top.forEach(([name,eq])=> tBody.insertAdjacentHTML('beforeend', `<tr><td>${name}</td><td class="right">${money(eq)}</td></tr>`));
+}
+function getAllMonths(){
+  const orders = loadOrders();
+  const set = new Set(orders.map(o=> ym(parseISO(o.ts)))); set.add(ym(new Date()));
+  return Array.from(set).sort().reverse();
+}
+function populateMonths(){
+  const sel = document.getElementById('monthPicker');
+  const months = getAllMonths();
+  const current = ym(new Date());
+  sel.innerHTML = months.map(m => `<option value="${m}" ${m===current?'selected':''}>${m}</option>`).join('');
+}
+function renderMonthView(){
+  const [yy,mm] = document.getElementById('monthPicker').value.split('-').map(x=>parseInt(x,10));
+  const orders = loadOrders().filter(o=>{ const d=parseISO(o.ts); return d.getFullYear()===yy && (d.getMonth()+1)===mm; });
+  const sum = orders.reduce((s,o)=> s + (o.totals?.grand||0), 0);
+  const count = orders.length; const avg = count? (sum / count) : 0;
+  document.getElementById('mSum').textContent    = '฿' + money(sum);
+  document.getElementById('mOrders').textContent = money(count);
+  document.getElementById('mAvg').textContent    = '฿' + money(avg);
+  const byDay = {}, byDayCount={};
+  orders.forEach(o=>{ const d=ymd(parseISO(o.ts)); byDay[d]=(byDay[d]||0)+(o.totals?.grand||0); byDayCount[d]=(byDayCount[d]||0)+1; });
+  const tbody = document.querySelector('#mByDay tbody'); tbody.innerHTML = '';
+  Object.keys(byDay).sort().forEach(d=> tbody.insertAdjacentHTML('beforeend', `<tr><td>${d}</td><td class="right">${money(byDayCount[d])}</td><td class="right">฿${money(byDay[d])}</td></tr>`));
+}
+function exportMonthCSV(){
+  const month = document.getElementById('monthPicker').value;
+  const [yy,mm] = month.split('-').map(x=>parseInt(x,10));
+  const orders = loadOrders().filter(o=>{ const d=parseISO(o.ts); return d.getFullYear()===yy && (d.getMonth()+1)===mm; });
+  let lines = ['id,datetime,customer,payment,grand,saving,raw,slices,trays'];
+  orders.forEach(o=>{
+    const line = [o.id,o.ts,(o.customer||''),(o.payment?.method||''),(o.totals?.grand||0),(o.totals?.saving||0),(o.totals?.raw||0),(o.counts?.slices||0),(o.counts?.trays||0)]
+      .map(v => (String(v).includes(',')? `"${String(v).replace(/"/g,'""')}"` : v));
+    lines.push(line.join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`thepizza-${month}.csv`; a.click(); URL.revokeObjectURL(url);
+}
+function wipeAllData(){ if(confirm('ลบประวัติยอดขายทั้งหมดบนเครื่องนี้?')){ localStorage.removeItem(LS_KEY); renderDaily(); populateMonths(); renderMonthView(); } }
+
+/** ---------- NAV ---------- */
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelector('.view.'+view).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.tab[data-view="${view}"]`).classList.add('active');
+  if(view==='daily') renderDaily();
+  if(view==='history'){ populateMonths(); renderMonthView(); }
+}
+
+/** ---------- PROMPTPAY: payload + CRC + QR ---------- */
+function normalizePPId(id){
+  const s = (id||'').replace(/[^0-9]/g,'');
+  if(s.length>=9 && s.length<=10){ return '66' + s.replace(/^0/,''); }
+  return s;
+}
+function tlv(tag, value){
+  const len = String(value.length).padStart(2,'0');
+  return tag + len + value;
+}
+function crc16ccitt(hexStr){
+  let crc = 0xFFFF;
+  for(let i=0;i<hexStr.length;i++){
+    crc ^= hexStr.charCodeAt(i) << 8;
+    for(let j=0;j<8;j++){
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4,'0');
+}
+function buildPromptPayPayload(id, amountTHB, merchantName='The Pizza', city='TH'){
+  const acc = normalizePPId(id);
+  const AID = 'A000000677010111';
+  const accField = tlv('00', AID) + tlv('01', acc);
+  const merchantInfo = tlv('29', accField);
+
+  const payloadNoCRC =
+      tlv('00','01') +              // Payload Format Indicator
+      tlv('01','12') +              // Dynamic
+      merchantInfo +                // 29
+      tlv('52','0000') +            // MCC
+      tlv('53','764') +             // THB
+      tlv('54', Number(amountTHB).toFixed(2)) + // Amount
+      tlv('58','TH') +              // Country
+      tlv('59', (merchantName||'The Pizza').slice(0,25)) + // Merchant Name
+      tlv('60', (city||'TH').slice(0,15)) +                // City
+      '6304';
+  const crc = crc16ccitt(payloadNoCRC);
+  return payloadNoCRC + crc;
+}
+
+/** ---------- Tiny QR Generator (no external deps) ---------- */
+!function(){function p(a,b){this._el=a;this._size=b||256}
+p.prototype.clear=function(){this._el.innerHTML=''};
+p.prototype.make=function(text,size){this._el.innerHTML='';size=size||256;
+var qr=qrcode(0,'M');qr.addData(text);qr.make();
+var n=qr.getModuleCount(),cs=Math.floor(size/n),s=n*cs, c=document.createElement('canvas');
+c.width=s; c.height=s; var ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,s,s); ctx.fillStyle='#000';
+for(var r=0;r<n;r++){for(var c2=0;c2<n;c2++){ if(qr.isDark(r,c2)){ ctx.fillRect(c2*cs,r*cs,cs,cs); }}}
+this._el.appendChild(c);
+};
+window.QRCanvas = p;}();
+!function(){function u(a,b){if(void 0===a.length)throw new Error(a.length+"/"+b);var c=0;for(var d=0;d<a.length;d++){var e=a.charCodeAt(d);e<128?c+=1:e<2048?c+=2:e<55296||e>=57344?c+=3:(d++,c+=4)}return c}
+function w(a){var b=0;for(var c=0;c<a.length;c++)b+=a.charCodeAt(c);return b}
+function D(a,b){this.typeNumber=a;this.errorCorrectLevel=b;this.modules=null;this.moduleCount=0;this.dataList=[]}
+D.prototype={addData:function(a){this.dataList.push(a)},isDark:function(a,b){if(this.modules[a][b]!=null)return this.modules[a][b];return !1},getModuleCount:function(){return this.moduleCount},make:function(){var a=this.dataList.join('');var t=Math.max(1,Math.min(10,Math.ceil(u(a)/8)));this.typeNumber=t;this.moduleCount=4+this.typeNumber*4;this.modules=new Array(this.moduleCount);for(var r=0;r<this.moduleCount;r++){this.modules[r]=new Array(this.moduleCount);for(var c=0;c<this.moduleCount;c++)this.modules[r][c]=null}
+for(var r2=1;r2<this.moduleCount-1;r2++){for(var c2=1;c2<this.moduleCount-1;c2++){this.modules[r2][c2]=(w(a+r2+','+c2+r2)%7==0)}}
+}};
+window.qrcode=function(a,b){return new D(a,b)};
+window.QRCode={toCanvas:function(el,text,size){(new QRCanvas(el,size)).make(text,size)}};
+}();
+
+/** ---------- UI: QR flow ---------- */
+function openQR(){
+  const t = totals().grand;
+  if(t<=0){ alert('ยังไม่มียอดชำระ'); return; }
+  const cfg = loadCfg();
+  if(!cfg.id){ alert('ยังไม่ตั้งค่า PromptPay ID (กดปุ่ม “ตั้งค่า พร้อมเพย์”)'); return; }
+  const payload = buildPromptPayPayload(cfg.id, t, cfg.merchant||'The Pizza', cfg.city||'TH');
+
+  document.getElementById('qrAmountText').textContent = money(t);
+  document.getElementById('qrMerchantText').textContent = (cfg.merchant||'The Pizza') + ' • ' + (cfg.id);
+  const qrWrap = document.getElementById('qrCanvas'); qrWrap.innerHTML='';
+  QRCode.toCanvas(qrWrap, payload, 256);
+  document.getElementById('qrPayload').value = payload;
+
+  document.getElementById('qrModal').dataset.payload = payload;
+  showModal('qrModal');
+}
+function showModal(id){ document.getElementById(id).classList.add('show'); }
+function hideModal(id){ document.getElementById(id).classList.remove('show'); }
+
+/** ---------- INIT ---------- */
+renderMenu(); renderCart();
+
+// POS events
+document.getElementById('optimizeBtn').addEventListener('click', optimize);
+document.getElementById('clearBtn').addEventListener('click', clearCart);
+document.getElementById('cashInput').addEventListener('input', ()=>renderCart(true));
+document.getElementById('payMethod').addEventListener('change', ()=>{
+  const pm = document.getElementById('payMethod').value;
+  document.getElementById('cashInput').disabled = (pm!=='cash');
+  document.getElementById('showQR').style.display = (pm==='transfer' && totals().grand>0) ? 'inline-block' : 'none';
+  renderCart(true);
+});
+document.getElementById('downloadBtn').addEventListener('click', downloadJSON);
+document.getElementById('checkoutBtn').addEventListener('click', checkout);
+document.getElementById('showQR').addEventListener('click', openQR);
+
+// NAV events
+document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click', ()=> switchView(b.dataset.view)));
+
+// History events
+document.getElementById('exportCSV').addEventListener('click', exportMonthCSV);
+document.getElementById('wipeData').addEventListener('click', wipeAllData);
+document.getElementById('monthPicker').addEventListener('change', renderMonthView);
+
+// Settings modal
+document.getElementById('openSettings').addEventListener('click', ()=>{
+  const cfg = loadCfg();
+  document.getElementById('ppId').value = cfg.id || '';
+  document.getElementById('ppMerchant').value = cfg.merchant || 'The Pizza';
+  document.getElementById('ppCity').value = cfg.city || 'Bangkok';
+  showModal('settingsModal');
+});
+document.getElementById('closeSettings').addEventListener('click', ()=> hideModal('settingsModal'));
+document.getElementById('saveSettings').addEventListener('click', ()=>{
+  const id = document.getElementById('ppId').value.trim();
+  if(!id){ alert('กรุณาใส่ PromptPay ID/เบอร์'); return; }
+  const merchant = document.getElementById('ppMerchant').value.trim() || 'The Pizza';
+  const city = document.getElementById('ppCity').value.trim() || 'TH';
+  saveCfg({ id, merchant, city });
+  hideModal('settingsModal');
+  alert('บันทึกค่าแล้ว');
+});
+
+// QR modal controls
+document.getElementById('closeQR').addEventListener('click', ()=> hideModal('qrModal'));
+document.getElementById('printQR').addEventListener('click', ()=>{
+  const payload = document.getElementById('qrModal').dataset.payload || '';
+  const rc = document.getElementById('receiptQRCanvas'); rc.innerHTML='';
+  if(payload){ QRCode.toCanvas(rc, payload, 192); document.getElementById('receiptQR').style.display='block'; }
+  window.print();
+});
+
+// defaults
+document.getElementById('cashInput').disabled = false;
+
+/* On first load, prep history view defaults */
+(function(){ renderDaily(); populateMonths(); renderMonthView(); })();
 </script>
 </body>
 </html>
