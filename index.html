@@ -3,132 +3,172 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>The Pizza | POS + รายวัน + ประวัติรายได้ + พร้อมเพย์</title>
+<title>The Pizza | POS + รายวัน + ประวัติรายได้</title>
 <style>
   :root{
-    /* --- Red / Green Theme --- */
-    --bg:#151515;           /* พื้นหลังหลัก */
-    --panel:#1b1b1b;        /* พื้น panel */
-    --soft:#222;            /* การ์ด/ปุ่มรอง */
-    --soft-2:#2a2a2a;       /* ปุ่มรอง hover */
-    --text:#f8f8f8;         /* ข้อความหลัก */
-    --muted:#cfcfcf;        /* ข้อความรอง */
-    --accent:#28a745;       /* เขียวหลัก (ยืนยัน/คิดเงิน/+ถาด) */
-    --danger:#e53935;       /* แดงหลัก (ลบ/+ชิ้น) */
-    --warn:#ffc107;         /* เหลือง (คำนวณ/แจ้งเตือน) */
-    --border:#333;          /* เส้นขอบ */
-    --overlay:#0009;        /* โมดัล */
+    /* Red-Green refreshed theme */
+    --bg:#131414;
+    --bg-accent:#171a17;
+    --panel:#181a1b;
+    --glass:rgba(24,26,27,.72);
+    --soft:#202223;
+    --soft-2:#2a2d2e;
+
+    --text:#f6f7f7;
+    --muted:#cfd6d3;
+
+    --accent:#28a745;    /* green */
+    --accent-2:#66bb6a;
+    --danger:#e53935;    /* red */
+    --danger-2:#ff6b6b;
+    --warn:#ffc107;
+
+    --border:#2f3335;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:16px;
   }
+
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,TH Sarabun New,Prompt,sans-serif;
-    color:var(--text); background:var(--bg);
+    color:var(--text);
+    background:
+      radial-gradient(1000px 600px at -10% -10%, #1e221e 0%, transparent 60%),
+      radial-gradient(900px 700px at 110% 10%, #261919 0%, transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, #0f1010 100%);
   }
+
+  /* Header */
   header{
-    position:sticky; top:0; z-index:10; backdrop-filter: blur(6px);
-    background:linear-gradient(90deg, #1b1b1b 0%, #231717 50%, #1b221b 100%);
+    position:sticky; top:0; z-index:10;
+    backdrop-filter:saturate(1.2) blur(8px);
+    background:linear-gradient(90deg, #191d19 0%, #1f1717 50%, #191d19 100%);
     border-bottom:1px solid var(--border);
   }
   .wrap{max-width:1200px; margin:0 auto; padding:16px}
-  .brand{display:flex; align-items:center; gap:12px;}
+  .brand{display:flex; align-items:center; gap:14px}
   .logo{
-    width:44px; height:44px; border-radius:12px;
-    background:conic-gradient(from 200deg at 50% 50%, var(--danger), #ff7043, var(--accent), #66bb6a, var(--danger));
-    display:grid; place-items:center; font-weight:900; color:#fff; border:2px solid #0007;
-    box-shadow:0 6px 20px #00000055, inset 0 0 20px #ffffff11;
+    width:52px; height:52px; border-radius:14px;
+    background:
+      radial-gradient(120% 120% at 20% 20%, #ff7a6a 0%, #e53935 45%, #ab2121 60%, #28a745 100%);
+    display:grid; place-items:center; font-size:26px; border:2px solid #00000033;
+    box-shadow:0 10px 30px #0006, inset 0 0 20px #ffffff22;
   }
-  .brand h1{margin:0; font-size:22px; letter-spacing:.5px}
-  .price-strip{display:flex; gap:12px; color:var(--muted); font-size:14px; flex-wrap:wrap}
-  .pill{background:var(--soft); padding:6px 10px; border-radius:999px; border:1px solid var(--border)}
-  .nav{display:flex; gap:6px; flex-wrap:wrap}
+  h1{margin:0; font-size:22px; letter-spacing:.2px}
+  .sub{color:var(--muted); font-size:13px}
+  .ribbon{
+    margin-top:10px; display:flex; gap:10px; flex-wrap:wrap
+  }
+  .chip{
+    background:linear-gradient(180deg, #1b1d1e, #141516);
+    border:1px solid var(--border); color:var(--muted);
+    padding:6px 10px; border-radius:999px; font-size:13px
+  }
+  .nav{display:flex; gap:8px; flex-wrap:wrap}
   .tab{
-    background:var(--soft); border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer; color:var(--text)
+    background:linear-gradient(180deg, #202324, #1a1c1d);
+    border:1px solid var(--border); padding:9px 14px; border-radius:999px; cursor:pointer;
+    color:#e9f9ed; letter-spacing:.2px
   }
-  .tab.active{background:#213021; border-color:#355c35; color:#dcffe4}
-  .settings-btn{margin-left:8px}
+  .tab.active{background:linear-gradient(180deg, #1f2a1f, #182018); border-color:#395b39}
 
-  main{display:grid; grid-template-columns:1.3fr .7fr; gap:16px; padding:16px}
-  @media (max-width: 900px){ main{grid-template-columns:1fr} }
-  .panel{background:var(--panel); border:1px solid var(--border); border-radius:16px}
-  .panel h2{margin:0; padding:16px; border-bottom:1px solid var(--border); font-size:18px}
+  /* Layout */
+  main{display:grid; grid-template-columns:1.35fr .65fr; gap:18px; padding:18px}
+  @media (max-width:1024px){ main{grid-template-columns:1fr} }
 
-  /* Menu grid */
-  .menu{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; padding:16px}
+  /* Panel */
+  .panel{
+    background:var(--glass);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .panel h2{
+    margin:0; padding:14px 16px;
+    background:linear-gradient(180deg, #1b1e1f, #141616);
+    border-bottom:1px solid var(--border);
+    font-size:18px; display:flex; align-items:center; gap:8px
+  }
+  .panel h2 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--accent)}
+
+  /* Menu grid (cards) */
+  .menu{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; padding:16px}
   .card{
-    background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px;
+    background:linear-gradient(180deg, var(--soft) 0%, #17191a 100%);
+    border:1px solid var(--border); border-radius:14px; padding:14px;
+    display:flex; gap:10px; flex-direction:column;
     transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
   }
-  .card:hover{transform:translateY(-2px); box-shadow:0 8px 30px #0006; border-color:#3c6b3c}
-  .card h3{margin:0 0 6px 0; font-size:16px}
-  .desc{color:var(--muted); font-size:13px; line-height:1.35; min-height:3.6em}
+  .card:hover{transform:translateY(-2px); box-shadow:0 10px 30px #0006; border-color:#355c35}
+  .card h3{margin:0; font-size:16px}
+  .desc{color:var(--muted); font-size:13px; line-height:1.4; min-height:3.4em}
   .actions{display:flex; gap:8px; margin-top:auto}
 
-  /* Buttons */
+  /* Controls */
   button{
-    cursor:pointer; border:none; border-radius:10px; padding:10px 12px; background:var(--soft-2); color:var(--text);
-    border:1px solid var(--border); font-weight:700
+    cursor:pointer; border:none; border-radius:12px; padding:10px 12px;
+    background:var(--soft-2); color:#fff; border:1px solid var(--border); font-weight:700
   }
   button:hover{filter:brightness(1.05)}
-  .btn-add-piece{background:var(--danger); border-color:#8a1e1c;}
-  .btn-add-tray{background:var(--accent); border-color:#1f7a33;}
-  .btn-danger{background:var(--danger); border-color:#8a1e1c; color:#fff}
-  .btn-accent{background:var(--accent); border-color:#1f7a33; color:#fff}
-  .btn-warn{background:var(--warn); border-color:#cc9a06; color:#000}
+  .btn-add-piece{background:linear-gradient(180deg, #b02523, #8f1d1b); border-color:#7b1a18}
+  .btn-add-tray{background:linear-gradient(180deg, #1f7a33, #195e28); border-color:#185326}
+  .btn-danger{background:linear-gradient(180deg, #cf2f2c, #9a2422); border-color:#7b1a18}
+  .btn-accent{background:linear-gradient(180deg, #2ba84a, #1e7a36); border-color:#1e6a30}
+  .btn-warn{background:linear-gradient(180deg, #ffd451, #eab308); color:#1a1200; border-color:#cc9a06}
+  .btn-ghost{background:transparent; border-color:#3a3e41; color:#d9dfdc}
 
-  /* Cart */
-  .cart-wrap{padding:0}
+  /* Table / cart */
   .cart-body{padding:12px 16px}
-  .cart-tools{display:flex; gap:8px; padding:12px 16px; border-top:1px dashed var(--border); flex-wrap:wrap}
   table{width:100%; border-collapse:collapse}
-  th, td{padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; font-size:14px}
-  th{color:var(--muted); font-weight:600}
-  td.qty{white-space:nowrap}
-  .qty-ctrl{display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden}
-  .qty-ctrl button{padding:6px 10px}
-  .num{display:inline-block; min-width:22px; text-align:center}
+  th,td{padding:10px 8px; border-bottom:1px solid var(--border); font-size:14px}
+  th{color:#b9c6bf; font-weight:700; text-align:left}
+  td{color:#e7ecea}
   .right{text-align:right}
+  .qty{white-space:nowrap}
+  .qty-ctrl{display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; background:#151717}
+  .qty-ctrl button{padding:6px 10px}
+  .num{min-width:24px; display:inline-block; text-align:center}
   .muted{color:var(--muted)}
-  .summary{padding:12px 16px; border-top:1px solid var(--border); display:grid; gap:6px}
+
+  .cart-tools{display:flex; gap:8px; padding:12px 16px; border-top:1px dashed var(--border); flex-wrap:wrap}
+  .summary{padding:12px 16px; border-top:1px solid var(--border); display:grid; gap:8px}
   .summary .row{display:flex; justify-content:space-between; font-size:15px}
-  .summary .total{font-size:20px; font-weight:800}
-  .flex{display:flex; gap:8px; align-items:center}
+  .summary .total{font-size:22px; font-weight:900}
+
   input[type="number"], input[type="text"], select{
-    background:#101010; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; width:100%
+    background:#101212; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:10px 12px; width:100%
   }
 
   /* Views */
   .view{display:none}
   .view.active{display:block}
 
-  /* Daily & History */
   .grid{display:grid; gap:12px; padding:16px}
-  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px}
-  .stat{background:var(--soft); border:1px solid var(--border); border-radius:14px; padding:12px}
-  .stat h3{margin:0 0 8px 0; font-size:14px; color:var(--muted)}
-  .stat .val{font-size:22px; font-weight:800}
-  .filter-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px}
+  .stat{
+    background:linear-gradient(180deg, #1b1d1e, #141617);
+    border:1px solid var(--border); border-radius:14px; padding:12px;
+  }
+  .stat h3{margin:0 0 6px 0; font-size:13px; color:#9fb0a8; letter-spacing:.2px}
+  .val{font-size:22px; font-weight:900}
 
-  /* Modal */
-  .modal{position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; z-index:50}
-  .modal.show{display:flex}
-  .modal-card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; width:min(560px,92vw)}
-  .modal-card h3{margin:0 0 8px 0}
-  .qr-wrap{display:grid; place-items:center; padding:12px; background:#101510; border:1px solid var(--border); border-radius:12px}
-  .rowx{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);
+    background:linear-gradient(180deg, #161818, #121313);
+    color:#9fb0a8; font-size:12px
+  }
 
-  /* Receipt print */
+  /* Print */
   @media print{
-    header, .menu, .cart-tools, .nav, .view:not(.pos), .modal{display:none !important}
+    header, .menu, .cart-tools, .nav, .view:not(.pos){display:none !important}
     main{grid-template-columns:1fr !important}
-    .panel{border:none}
+    .panel{border:none; box-shadow:none}
     body{background:#fff; color:#000}
     .summary .total{font-size:18px}
-    .print-only{display:block !important}
   }
-  .print-only{display:none}
-  .saving{color:#76ff9b; font-weight:700}
-  .badge{font-size:12px; padding:2px 8px; border-radius:999px; background:#2a3b2a; border:1px solid #3f5f3f; color:#dbffe6}
 </style>
 </head>
 <body>
@@ -138,10 +178,11 @@
         <div class="logo">🍕</div>
         <div>
           <h1>The Pizza</h1>
-          <div class="price-strip">
-            <span class="pill">ชิ้นละ <b>25</b> บาท</span>
-            <span class="pill">ถาดละ <b>189</b> บาท</span>
-            <span class="pill">1 ถาด = <b>8</b> ชิ้น</span>
+          <div class="sub">แป้งนุ่ม ชีสเยิ้ม • POS ขายหน้าร้าน</div>
+          <div class="ribbon">
+            <span class="chip">ชิ้นละ <b>25</b> บาท</span>
+            <span class="chip">ถาดละ <b>189</b> บาท</span>
+            <span class="chip">1 ถาด = <b>8</b> ชิ้น</span>
           </div>
         </div>
       </div>
@@ -149,7 +190,6 @@
         <button class="tab active" data-view="pos">ขาย (POS)</button>
         <button class="tab" data-view="daily">สรุปรายวัน</button>
         <button class="tab" data-view="history">ประวัติรายได้ (รายเดือน)</button>
-        <button class="tab settings-btn" id="openSettings">ตั้งค่า พร้อมเพย์</button>
       </nav>
     </div>
   </header>
@@ -159,13 +199,13 @@
     <main class="wrap">
       <!-- Menu -->
       <section class="panel">
-        <h2>เมนูพิซซ่า</h2>
+        <h2><span class="dot"></span> เมนูพิซซ่า</h2>
         <div class="menu" id="menuGrid"></div>
       </section>
 
       <!-- Cart / POS -->
       <section class="panel cart-wrap">
-        <h2>ตะกร้าสินค้า</h2>
+        <h2><span class="dot" style="background:var(--danger)"></span> ตะกร้าสินค้า</h2>
         <div class="cart-body">
           <table id="cartTable">
             <thead>
@@ -185,45 +225,47 @@
         </div>
 
         <div class="cart-tools">
-          <button class="btn-warn" id="optimizeBtn">คำนวณราคาดีที่สุด (จัดถาดอัตโนมัติ)</button>
-          <button class="btn-danger" id="clearBtn">ล้างรายการ</button>
-          <span class="badge">ระบบคิดถูกสุดระหว่าง “ชิ้น” และ “ถาด” ต่อรส</span>
+          <button class="btn-warn" id="optimizeBtn">⚖️ คำนวณราคาดีที่สุด (จัดถาดอัตโนมัติ)</button>
+          <button class="btn-danger" id="clearBtn">🧹 ล้างรายการ</button>
+          <span class="chip">ระบบคิดถูกสุดระหว่าง “ชิ้น” และ “ถาด” ต่อรส</span>
         </div>
 
         <div class="summary">
           <div class="row"><span>ยอดก่อนปรับ</span><span class="right" id="rawSubtotal">0</span></div>
-          <div class="row"><span>ส่วนต่างประหยัด</span><span class="right saving" id="saving">0</span></div>
+          <div class="row"><span>ส่วนต่างประหยัด</span><span class="right" id="saving">0</span></div>
           <div class="row total"><span>ยอดสุทธิ</span><span class="right" id="grandTotal">0</span></div>
 
-          <div class="row" style="gap:8px; align-items:center">
+          <div class="row" style="gap:8px; align-items:center; flex-wrap:wrap">
             <span>วิธีชำระ</span>
             <span style="min-width:200px">
               <select id="payMethod">
                 <option value="cash">เงินสด</option>
-                <option value="transfer">โอน/QR พร้อมเพย์</option>
+                <option value="transfer">โอน</option>
                 <option value="card">บัตร</option>
               </select>
             </span>
             <span style="min-width:180px"><input id="cashInput" type="number" min="0" step="1" placeholder="รับเงินสด (บาท)"></span>
-            <button id="showQR" style="display:none">แสดง QR พร้อมเพย์</button>
             <span>เงินทอน</span><span class="right" id="change">0</span>
           </div>
 
-          <div class="flex" style="margin-top:8px; flex-wrap:wrap">
-            <button class="btn-accent" id="checkoutBtn">คิดเงิน & พิมพ์ใบเสร็จ</button>
-            <button id="downloadBtn">บันทึกออเดอร์ (.json)</button>
-            <input id="customerName" type="text" placeholder="ชื่อลูกค้า (ถ้ามี)" />
+          <div class="row" style="gap:8px; align-items:center; flex-wrap:wrap">
+            <input id="customerName" type="text" placeholder="ชื่อลูกค้า (ถ้ามี)" style="max-width:260px" />
+            <span class="muted">เมื่อกด “คิดเงิน” ระบบจะบันทึกยอดขายอัตโนมัติ</span>
           </div>
-          <div class="muted" style="font-size:12px">* กด “คิดเงิน” เพื่อบันทึกยอดขายลงประวัติอัตโนมัติ</div>
+
+          <div class="row" style="gap:8px; flex-wrap:wrap">
+            <button class="btn-accent" id="checkoutBtn">💳 คิดเงิน & พิมพ์ใบเสร็จ</button>
+            <button class="btn-ghost" id="downloadBtn">💾 บันทึกออเดอร์ (.json)</button>
+          </div>
         </div>
 
         <!-- Receipt (print view) -->
-        <div class="print-only" id="printArea">
+        <div class="print-only" id="printArea" style="padding:16px">
           <h2 style="margin:8px 0 0 0">The Pizza — ใบเสร็จรับเงิน</h2>
           <div id="receiptMeta" style="font-size:13px; color:#444"></div>
-          <table style="margin-top:8px">
+          <table style="margin-top:8px; width:100%; border-collapse:collapse">
             <thead>
-              <tr><th>รายการ</th><th class="right">ชนิด</th><th class="right">จำนวน</th><th class="right">ราคา</th></tr>
+              <tr><th style="text-align:left; padding:6px 0">รายการ</th><th class="right">ชนิด</th><th class="right">จำนวน</th><th class="right">ราคา</th></tr>
             </thead>
             <tbody id="receiptBody"></tbody>
           </table>
@@ -235,11 +277,6 @@
             <div style="display:flex; justify-content:space-between"><span>รับเงิน</span><b id="rCash">0</b></div>
             <div style="display:flex; justify-content:space-between"><span>เงินทอน</span><b id="rChange">0</b></div>
           </div>
-          <!-- QR บนใบเสร็จ -->
-          <div id="receiptQR" style="margin-top:10px; display:none;">
-            <div style="font-size:12px;color:#444;margin-bottom:6px">QR พร้อมเพย์สำหรับบิลนี้</div>
-            <div id="receiptQRCanvas" class="qr-wrap" style="border:1px dashed #ccc;"></div>
-          </div>
           <p style="margin-top:12px;font-size:12px;color:#444">ขอบคุณที่อุดหนุน 🍕</p>
         </div>
       </section>
@@ -249,7 +286,7 @@
   <!-- DAILY VIEW -->
   <section class="view daily">
     <div class="wrap panel">
-      <h2>สรุปยอดขาย “วันนี้”</h2>
+      <h2><span class="dot"></span> สรุปยอดขาย “วันนี้”</h2>
       <div class="grid">
         <div class="stats">
           <div class="stat"><h3>ยอดรวม (บาท)</h3><div class="val" id="dSum">0</div></div>
@@ -282,82 +319,42 @@
   <!-- HISTORY VIEW -->
   <section class="view history">
     <div class="wrap panel">
-      <h2>ประวัติรายได้ (รายเดือน)</h2>
+      <h2><span class="dot"></span> ประวัติรายได้ (รายเดือน)</h2>
       <div class="grid">
-        <div class="filter-row">
-          <label>เลือกเดือน: </label>
-          <select id="monthPicker"></select>
-          <button id="exportCSV">ส่งออก CSV</button>
-          <button class="btn-danger" id="wipeData">ลบประวัติทั้งหมด</button>
-          <span class="muted">* เก็บข้อมูลในเครื่องนี้ (localStorage)</span>
-        </div>
-
-        <div class="stats">
+        <div class="stats" style="margin-top:-4px">
           <div class="stat"><h3>ยอดรวมเดือนนี้</h3><div class="val" id="mSum">0</div></div>
           <div class="stat"><h3>จำนวนบิลเดือนนี้</h3><div class="val" id="mOrders">0</div></div>
           <div class="stat"><h3>เฉลี่ย/บิล เดือนนี้</h3><div class="val" id="mAvg">0</div></div>
         </div>
 
-        <div>
-          <h3 style="margin:0 0 8px 0">สรุปรายวันในเดือนที่เลือก</h3>
-          <table id="mByDay">
-            <thead><tr><th>วันที่</th><th class="right">จำนวนบิล</th><th class="right">ยอดรวม (บาท)</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <div class="grid" style="padding-top:0">
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+            <label>เลือกเดือน: </label>
+            <select id="monthPicker"></select>
+            <button class="btn-ghost" id="exportCSV">⬇️ ส่งออก CSV</button>
+            <button class="btn-danger" id="wipeData">🗑️ ลบประวัติทั้งหมด</button>
+            <span class="muted">* เก็บข้อมูลในเครื่องนี้ (localStorage)</span>
+          </div>
+
+          <div>
+            <h3 style="margin:0 0 8px 0">สรุปรายวันในเดือนที่เลือก</h3>
+            <table id="mByDay">
+              <thead><tr><th>วันที่</th><th class="right">จำนวนบิล</th><th class="right">ยอดรวม (บาท)</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- SETTINGS MODAL (PromptPay) -->
-  <div class="modal" id="settingsModal">
-    <div class="modal-card">
-      <h3>ตั้งค่า พร้อมเพย์</h3>
-      <div class="rowx">
-        <div style="flex:1">
-          <label>PromptPay ID / เบอร์ (เช่น 0812345678 หรือ 1XXXXXXXXXXXXX)</label>
-          <input id="ppId" type="text" placeholder="กรอกเบอร์มือถือ หรือ เลขบัตร/นิติบุคคล">
-        </div>
-      </div>
-      <div class="rowx" style="margin-top:8px">
-        <div style="flex:1">
-          <label>ชื่อร้าน/ผู้รับเงิน</label>
-          <input id="ppMerchant" type="text" placeholder="The Pizza">
-        </div>
-        <div style="flex:1">
-          <label>เมือง/จังหวัด</label>
-          <input id="ppCity" type="text" placeholder="Bangkok">
-        </div>
-      </div>
-      <div class="rowx" style="margin-top:12px; justify-content:flex-end">
-        <button id="closeSettings">ยกเลิก</button>
-        <button class="btn-accent" id="saveSettings">บันทึก</button>
-      </div>
+  <footer>
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:8px; padding:14px 16px">
+      <div>© <span id="yy"></span> The Pizza — POS</div>
+      <div>ธีมสี <span style="color:#ff6b6b">แดง</span> + <span style="color:#76ff9b">เขียว</span></div>
     </div>
-  </div>
-
-  <!-- QR MODAL -->
-  <div class="modal" id="qrModal">
-    <div class="modal-card">
-      <h3>QR พร้อมเพย์ สำหรับชำระเงิน</h3>
-      <div class="rowx">
-        <div>ยอดชำระ: <b id="qrAmountText">-</b> บาท</div>
-        <div class="pill" id="qrMerchantText" style="margin-left:auto">-</div>
-      </div>
-      <div class="qr-wrap" style="margin-top:10px">
-        <div id="qrCanvas"></div>
-      </div>
-      <div style="margin-top:10px">
-        <label class="muted" style="font-size:12px">EMVCo Payload (กดเพื่อคัดลอก):</label>
-        <input id="qrPayload" type="text" readonly onclick="this.select();document.execCommand('copy')" />
-      </div>
-      <div class="rowx" style="margin-top:12px; justify-content:flex-end">
-        <button id="printQR">พิมพ์ใบเสร็จพร้อม QR</button>
-        <button id="closeQR">ปิด</button>
-      </div>
-      <div class="muted" style="margin-top:8px; font-size:12px">* ไม่มีการยืนยันยอดจากธนาคาร (ออฟไลน์) — โปรดยืนยันการโอนก่อนกด “คิดเงิน”</div>
-    </div>
-  </div>
+  </footer>
 
 <script>
 /** ---------- CONFIG ---------- */
@@ -378,11 +375,8 @@ const MENU = [
 
 /** ---------- STORAGE ---------- */
 const LS_KEY  = 'thepizza_orders_v1';
-const CFG_KEY = 'thepizza_promptpay_cfg_v1';
 const loadOrders = () => JSON.parse(localStorage.getItem(LS_KEY) || '[]');
 const saveOrders = (arr) => localStorage.setItem(LS_KEY, JSON.stringify(arr));
-const loadCfg = () => JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
-const saveCfg = (c) => localStorage.setItem(CFG_KEY, JSON.stringify(c));
 
 /** ---------- STATE ---------- */
 let cart = []; // {id, name, type:'slice'|'tray', qty, unit, subtotal}
@@ -451,8 +445,8 @@ function renderMenu(){
       <h3>${m.name}</h3>
       <p class="desc">${m.desc}</p>
       <div class="actions">
-        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">+ ชิ้น (฿${PRICE_PER_SLICE})</button>
-        <button class="btn-add-tray"  onclick="addItem('${m.id}','tray')">+ ถาด (฿${PRICE_PER_TRAY})</button>
+        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">➕ ชิ้น (฿${PRICE_PER_SLICE})</button>
+        <button class="btn-add-tray"  onclick="addItem('${m.id}','tray')">🧺 ถาด (฿${PRICE_PER_TRAY})</button>
       </div>
     </article>`).join('');
 }
@@ -489,10 +483,8 @@ function renderCart(){
   const cash = parseFloat(document.getElementById('cashInput').value||0);
   const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
   document.getElementById('change').textContent = '฿' + money(change);
-
-  document.getElementById('showQR').style.display = (method==='transfer' && t.grand>0) ? 'inline-block' : 'none';
 }
-function buildReceipt(method, cash, change, payloadForQR){
+function buildReceipt(method, cash, change){
   const now = new Date();
   const meta = [
     `วันที่: ${now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}`,
@@ -522,20 +514,9 @@ function buildReceipt(method, cash, change, payloadForQR){
   document.getElementById('rRaw').textContent   = '฿' + money(t.rawSubtotal);
   document.getElementById('rSave').textContent  = '฿' + money(t.saving);
   document.getElementById('rTotal').textContent = '฿' + money(t.grand);
-  document.getElementById('rPayMethod').textContent = method==='cash'?'เงินสด':(method==='transfer'?'โอน/QR':'บัตร');
+  document.getElementById('rPayMethod').textContent = method==='cash'?'เงินสด':(method==='transfer'?'โอน':'บัตร');
   document.getElementById('rCash').textContent   = '฿' + money(cash);
   document.getElementById('rChange').textContent = '฿' + money(change);
-
-  const receiptQR = document.getElementById('receiptQR');
-  const receiptQRCanvas = document.getElementById('receiptQRCanvas');
-  if(method==='transfer' && payloadForQR){
-    receiptQR.style.display = 'block';
-    receiptQRCanvas.innerHTML = '';
-    QRCode.toCanvas(receiptQRCanvas, payloadForQR, 192);
-  } else {
-    receiptQR.style.display = 'none';
-    receiptQRCanvas.innerHTML = '';
-  }
 }
 function downloadJSON(){
   const data = buildOrderPayload();
@@ -568,25 +549,22 @@ function checkout(){
   const t = totals();
   const method = document.getElementById('payMethod').value;
   const cash = parseFloat(document.getElementById('cashInput').value||0);
-  if(method==='cash' && cash < t.grand){ alert('เงินสดไม่พอชำระ'); return; }
-
-  let payloadForQR = '';
-  if(method==='transfer'){
-    const cfg = loadCfg();
-    if(!cfg.id){ alert('ยังไม่ตั้งค่า PromptPay ID (กดปุ่ม “ตั้งค่า พร้อมเพย์”)'); return; }
-    payloadForQR = buildPromptPayPayload(cfg.id, t.grand, cfg.merchant||'The Pizza', cfg.city||'TH');
+  if(method==='cash' && cash < t.grand){
+    alert('เงินสดไม่พอชำระ'); return;
   }
 
   const change = method==='cash' ? Math.max(0, cash - t.grand) : 0;
-  buildReceipt(method, cash, change, payloadForQR);
+  buildReceipt(method, cash, change);
   window.print();
 
   const orders = loadOrders();
   orders.push(buildOrderPayload());
   saveOrders(orders);
 
-  cart = []; document.getElementById('cashInput').value = '';
-  document.getElementById('customerName').value = ''; renderCart();
+  cart = [];
+  document.getElementById('cashInput').value = '';
+  document.getElementById('customerName').value = '';
+  renderCart();
 
   renderDaily(); populateMonths(); renderMonthView();
 }
@@ -618,7 +596,7 @@ function renderDaily(){
   orders.slice(-10).reverse().forEach(o=>{
     const t = new Date(o.ts);
     tbody.insertAdjacentHTML('beforeend',
-      `<tr><td>${t.toLocaleTimeString('th-TH')}</td><td class="right">฿${money(o.totals.grand)}</td><td>${o.payment.method==='cash'?'เงินสด':(o.payment.method==='transfer'?'โอน/QR':'บัตร')}</td></tr>`);
+      `<tr><td>${t.toLocaleTimeString('th-TH')}</td><td class="right">฿${money(o.totals.grand)}</td><td>${o.payment.method==='cash'?'เงินสด':(o.payment.method==='transfer'?'โอน':'บัตร')}</td></tr>`);
   });
   const top = Object.entries(menuCounter).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const tBody = document.querySelector('#dTopTable tbody'); tBody.innerHTML = '';
@@ -663,7 +641,7 @@ function exportMonthCSV(){
 }
 function wipeAllData(){ if(confirm('ลบประวัติยอดขายทั้งหมดบนเครื่องนี้?')){ localStorage.removeItem(LS_KEY); renderDaily(); populateMonths(); renderMonthView(); } }
 
-/** ---------- NAV ---------- */
+/** ---------- NAV + INIT ---------- */
 function switchView(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelector('.view.'+view).classList.add('active');
@@ -673,147 +651,43 @@ function switchView(view){
   if(view==='history'){ populateMonths(); renderMonthView(); }
 }
 
-/** ---------- PROMPTPAY: payload + CRC + QR ---------- */
-function normalizePPId(id){
-  const s = (id||'').replace(/[^0-9]/g,'');
-  if(s.length>=9 && s.length<=10){ return '66' + s.replace(/^0/,''); }
-  return s;
-}
-function tlv(tag, value){
-  const len = String(value.length).padStart(2,'0');
-  return tag + len + value;
-}
-function crc16ccitt(hexStr){
-  let crc = 0xFFFF;
-  for(let i=0;i<hexStr.length;i++){
-    crc ^= hexStr.charCodeAt(i) << 8;
-    for(let j=0;j<8;j++){
-      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
-      crc &= 0xFFFF;
-    }
-  }
-  return crc.toString(16).toUpperCase().padStart(4,'0');
-}
-function buildPromptPayPayload(id, amountTHB, merchantName='The Pizza', city='TH'){
-  const acc = normalizePPId(id);
-  const AID = 'A000000677010111';
-  const accField = tlv('00', AID) + tlv('01', acc);
-  const merchantInfo = tlv('29', accField);
+function init(){
+  document.getElementById('yy').textContent = new Date().getFullYear();
 
-  const payloadNoCRC =
-      tlv('00','01') +              // Payload Format Indicator
-      tlv('01','12') +              // Dynamic
-      merchantInfo +                // 29
-      tlv('52','0000') +            // MCC
-      tlv('53','764') +             // THB
-      tlv('54', Number(amountTHB).toFixed(2)) + // Amount
-      tlv('58','TH') +              // Country
-      tlv('59', (merchantName||'The Pizza').slice(0,25)) + // Merchant Name
-      tlv('60', (city||'TH').slice(0,15)) +                // City
-      '6304';
-  const crc = crc16ccitt(payloadNoCRC);
-  return payloadNoCRC + crc;
+  // Build menu
+  const g = document.getElementById('menuGrid');
+  g.innerHTML = MENU.map(m => `
+    <article class="card">
+      <h3>${m.name}</h3>
+      <p class="desc">${m.desc}</p>
+      <div class="actions">
+        <button class="btn-add-piece" onclick="addItem('${m.id}','slice')">➕ ชิ้น (฿${PRICE_PER_SLICE})</button>
+        <button class="btn-add-tray"  onclick="addItem('${m.id}','tray')">🧺 ถาด (฿${PRICE_PER_TRAY})</button>
+      </div>
+    </article>`).join('');
+
+  renderCart();
+
+  // POS events
+  document.getElementById('optimizeBtn').addEventListener('click', optimize);
+  document.getElementById('clearBtn').addEventListener('click', clearCart);
+  document.getElementById('cashInput').addEventListener('input', ()=>renderCart(true));
+  document.getElementById('payMethod').addEventListener('change', ()=>{
+    const pm = document.getElementById('payMethod').value;
+    document.getElementById('cashInput').disabled = (pm!=='cash');
+    renderCart(true);
+  });
+  document.getElementById('downloadBtn').addEventListener('click', downloadJSON);
+  document.getElementById('checkoutBtn').addEventListener('click', checkout);
+
+  // NAV events
+  document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click', ()=> switchView(b.dataset.view)));
+
+  // History defaults
+  renderDaily(); populateMonths(); renderMonthView();
 }
 
-/** ---------- Tiny QR Generator (no external deps) ---------- */
-!function(){function p(a,b){this._el=a;this._size=b||256}
-p.prototype.clear=function(){this._el.innerHTML=''};
-p.prototype.make=function(text,size){this._el.innerHTML='';size=size||256;
-var qr=qrcode(0,'M');qr.addData(text);qr.make();
-var n=qr.getModuleCount(),cs=Math.floor(size/n),s=n*cs, c=document.createElement('canvas');
-c.width=s; c.height=s; var ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,s,s); ctx.fillStyle='#000';
-for(var r=0;r<n;r++){for(var c2=0;c2<n;c2++){ if(qr.isDark(r,c2)){ ctx.fillRect(c2*cs,r*cs,cs,cs); }}}
-this._el.appendChild(c);
-};
-window.QRCanvas = p;}();
-!function(){function u(a,b){if(void 0===a.length)throw new Error(a.length+"/"+b);var c=0;for(var d=0;d<a.length;d++){var e=a.charCodeAt(d);e<128?c+=1:e<2048?c+=2:e<55296||e>=57344?c+=3:(d++,c+=4)}return c}
-function w(a){var b=0;for(var c=0;c<a.length;c++)b+=a.charCodeAt(c);return b}
-function D(a,b){this.typeNumber=a;this.errorCorrectLevel=b;this.modules=null;this.moduleCount=0;this.dataList=[]}
-D.prototype={addData:function(a){this.dataList.push(a)},isDark:function(a,b){if(this.modules[a][b]!=null)return this.modules[a][b];return !1},getModuleCount:function(){return this.moduleCount},make:function(){var a=this.dataList.join('');var t=Math.max(1,Math.min(10,Math.ceil(u(a)/8)));this.typeNumber=t;this.moduleCount=4+this.typeNumber*4;this.modules=new Array(this.moduleCount);for(var r=0;r<this.moduleCount;r++){this.modules[r]=new Array(this.moduleCount);for(var c=0;c<this.moduleCount;c++)this.modules[r][c]=null}
-for(var r2=1;r2<this.moduleCount-1;r2++){for(var c2=1;c2<this.moduleCount-1;c2++){this.modules[r2][c2]=(w(a+r2+','+c2+r2)%7==0)}}
-}};
-window.qrcode=function(a,b){return new D(a,b)};
-window.QRCode={toCanvas:function(el,text,size){(new QRCanvas(el,size)).make(text,size)}};
-}();
-
-/** ---------- UI: QR flow ---------- */
-function openQR(){
-  const t = totals().grand;
-  if(t<=0){ alert('ยังไม่มียอดชำระ'); return; }
-  const cfg = loadCfg();
-  if(!cfg.id){ alert('ยังไม่ตั้งค่า PromptPay ID (กดปุ่ม “ตั้งค่า พร้อมเพย์”)'); return; }
-  const payload = buildPromptPayPayload(cfg.id, t, cfg.merchant||'The Pizza', cfg.city||'TH');
-
-  document.getElementById('qrAmountText').textContent = money(t);
-  document.getElementById('qrMerchantText').textContent = (cfg.merchant||'The Pizza') + ' • ' + (cfg.id);
-  const qrWrap = document.getElementById('qrCanvas'); qrWrap.innerHTML='';
-  QRCode.toCanvas(qrWrap, payload, 256);
-  document.getElementById('qrPayload').value = payload;
-
-  document.getElementById('qrModal').dataset.payload = payload;
-  showModal('qrModal');
-}
-function showModal(id){ document.getElementById(id).classList.add('show'); }
-function hideModal(id){ document.getElementById(id).classList.remove('show'); }
-
-/** ---------- INIT ---------- */
-renderMenu(); renderCart();
-
-// POS events
-document.getElementById('optimizeBtn').addEventListener('click', optimize);
-document.getElementById('clearBtn').addEventListener('click', clearCart);
-document.getElementById('cashInput').addEventListener('input', ()=>renderCart(true));
-document.getElementById('payMethod').addEventListener('change', ()=>{
-  const pm = document.getElementById('payMethod').value;
-  document.getElementById('cashInput').disabled = (pm!=='cash');
-  document.getElementById('showQR').style.display = (pm==='transfer' && totals().grand>0) ? 'inline-block' : 'none';
-  renderCart(true);
-});
-document.getElementById('downloadBtn').addEventListener('click', downloadJSON);
-document.getElementById('checkoutBtn').addEventListener('click', checkout);
-document.getElementById('showQR').addEventListener('click', openQR);
-
-// NAV events
-document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click', ()=> switchView(b.dataset.view)));
-
-// History events
-document.getElementById('exportCSV').addEventListener('click', exportMonthCSV);
-document.getElementById('wipeData').addEventListener('click', wipeAllData);
-document.getElementById('monthPicker').addEventListener('change', renderMonthView);
-
-// Settings modal
-document.getElementById('openSettings').addEventListener('click', ()=>{
-  const cfg = loadCfg();
-  document.getElementById('ppId').value = cfg.id || '';
-  document.getElementById('ppMerchant').value = cfg.merchant || 'The Pizza';
-  document.getElementById('ppCity').value = cfg.city || 'Bangkok';
-  showModal('settingsModal');
-});
-document.getElementById('closeSettings').addEventListener('click', ()=> hideModal('settingsModal'));
-document.getElementById('saveSettings').addEventListener('click', ()=>{
-  const id = document.getElementById('ppId').value.trim();
-  if(!id){ alert('กรุณาใส่ PromptPay ID/เบอร์'); return; }
-  const merchant = document.getElementById('ppMerchant').value.trim() || 'The Pizza';
-  const city = document.getElementById('ppCity').value.trim() || 'TH';
-  saveCfg({ id, merchant, city });
-  hideModal('settingsModal');
-  alert('บันทึกค่าแล้ว');
-});
-
-// QR modal controls
-document.getElementById('closeQR').addEventListener('click', ()=> hideModal('qrModal'));
-document.getElementById('printQR').addEventListener('click', ()=>{
-  const payload = document.getElementById('qrModal').dataset.payload || '';
-  const rc = document.getElementById('receiptQRCanvas'); rc.innerHTML='';
-  if(payload){ QRCode.toCanvas(rc, payload, 192); document.getElementById('receiptQR').style.display='block'; }
-  window.print();
-});
-
-// defaults
-document.getElementById('cashInput').disabled = false;
-
-/* On first load, prep history view defaults */
-(function(){ renderDaily(); populateMonths(); renderMonthView(); })();
+init();
 </script>
 </body>
 </html>
